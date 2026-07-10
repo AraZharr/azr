@@ -1,0 +1,28 @@
+{
+  "name": "clover-bot",
+  "version": "1.0.0",
+  "description": "CLOVER — Telegram AI Assistant Bot with persistent memory and multi-provider AI",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^14.2.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "@supabase/supabase-js": "^2.43.0",
+    "@google/generative-ai": "^0.15.0",
+    "groq-sdk": "^0.5.0",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
