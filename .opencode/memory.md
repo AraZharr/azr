@@ -106,4 +106,9 @@
   - Login page tambah error handling untuk `CredentialsSignin` vs error lain
   - Console.error di authorize() untuk diagnosa di Vercel function logs
 
+### 2026-07-12 — Buat folder buglist
+- **Aksi**: dibuat
+- **File**: buglist/
+- **Detail**: Folder untuk dokumentasi bug
+
 ## Catatan
