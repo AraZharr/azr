@@ -46,3 +46,21 @@ Semua error ditampilkan "Email atau password salah" tanpa bedakan jenis error.
 
 ## Catatan
 Kalau masih 401 setelah deploy Vercel, cek Vercel Dashboard > Function Logs cari log `[auth]`.
+
+### Update 2026-07-12 — Root Cause Terakhir: IPv6 → Pooler
+
+**Vercel Function Logs** menunjukkan:
+```
+Can't reach database server at db.rzfyitcytflrbbzpkhff.supabase.co:5432
+```
+
+Hostname Supabase **hanya punya IPv6** (no A record). Vercel di region `iad1` tidak bisa reach IPv6 ke Supabase APAC.
+
+**Fix**: Ganti `DATABASE_URL` ke **Connection Pooler** (port 6543, support IPv4):
+```
+postgresql://postgres:Porto%40Azhar@rzfyitcytflrbbzpkhff.pooler.supabase.com:6543/postgres?pgbouncer=true
+```
+
+`?pgbouncer=true` diperlukan Prisma untuk koneksi via PgBouncer.
+
+**Aksi**: Update `.env` + push. Juga update `Vercel Dashboard > Environment Variables` → `DATABASE_URL` harus pakai pooler URL.
