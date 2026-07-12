@@ -229,4 +229,19 @@
   - Tambah libraries: TipTap, Framer Motion, shadcn/ui, Lucide
   - Tambah License MIT
 
+### 2026-07-12 — Rewrite README jadi SEO-rich & detail lengkap
+- **Aksi**: diedit
+- **File**: README.md
+- **Detail**: README dirombak total jadi SEO-friendly dan detail:
+  - Badge (Website, License) di header
+  - Section "Tentang" dengan layanan table
+  - Skills table dengan keterangan + tools & libraries table
+  - Projects dengan detail table (tech, fitur, use case)
+  - Fitur website: Admin Dashboard, AI Chatbot, SEO, Responsive Design
+  - Tech stack visual (tree structure)
+  - Project structure (folder tree)
+  - Social media table lengkap (10 platforms: email, WA, IG, TikTok, Telegram, Discord, GitHub, Twitter, LinkedIn, YouTube)
+  - Quick Start: Prerequisites, Install, Build & Deploy, Database Schema
+  - Semua social links sesuai dengan admin platforms
+
 ## Catatan
