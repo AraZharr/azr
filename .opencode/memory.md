@@ -200,4 +200,9 @@
   - Contact.js & Footer.js: dynamic social links dari database
   - Dashboard: tambah social link count stat
 
+### 2026-07-12 — Buat SETUP.md (panduan lengkap zero to deploy)
+- **Aksi**: dibuat
+- **File**: SETUP.md
+- **Detail**: 16 langkah dari install Node.js sampai live — clone, install, wrangler login, D1 create, migrasi, seed admin, .env, deploy, env vars di CF dashboard, custom domain, troubleshooting, ringkasan perintah
+
 ## Catatan
