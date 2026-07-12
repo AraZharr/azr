@@ -1,13 +1,13 @@
 -- Seed admin user
 -- Email    : admin@gdsi.my.id
--- Password : Porto@Azhar
+-- Password : Porto@Azhar (plain text — auth.js juga sudah disesuaikan)
 -- Jalankan di Supabase SQL Editor
 
 INSERT INTO "User" (id, email, password, name)
 VALUES (
   gen_random_uuid()::text,
   'admin@gdsi.my.id',
-  '$2b$10$lBP5CUCraHTf9X5GgDj3qe4mvxWliVJKx5WJCmI61Q08/g2k/hIqC',
+  'Porto@Azhar',
   'Admin'
 )
-ON CONFLICT (email) DO UPDATE SET password = '$2b$10$lBP5CUCraHTf9X5GgDj3qe4mvxWliVJKx5WJCmI61Q08/g2k/hIqC';
+ON CONFLICT (email) DO UPDATE SET password = 'Porto@Azhar';
