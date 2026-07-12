@@ -176,4 +176,9 @@
   - **Font**: Inter via `next/font/google` + system-ui fallback
   - **UI**: Clean card, avatar circle, bounce dot typing indicator, quick reply buttons, seamless input bar
 
+### 2026-07-12 — Rewrite README sebagai portfolio introduction
+- **Aksi**: diedit
+- **File**: README.md
+- **Detail**: README dijadikan seperti SEO content — memperkenalkan AraZhar, skills, projects, layanan, kontak, dan tech stack website ini. Bukan lagi technical project README.
+
 ## Catatan
