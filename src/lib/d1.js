@@ -118,9 +118,9 @@ export async function deleteArticle(id) {
 export async function getCounts() {
   const db = getDB()
   const { results } = await db.prepare(
-    "SELECT (SELECT COUNT(*) FROM Page) as pageCount, (SELECT COUNT(*) FROM BlogArticle) as articleCount, (SELECT COUNT(*) FROM SocialLink) as socialCount"
+    "SELECT (SELECT COUNT(*) FROM Page) as pageCount, (SELECT COUNT(*) FROM BlogArticle) as articleCount, (SELECT COUNT(*) FROM SocialLink) as socialCount, (SELECT COUNT(*) FROM Skill) as skillCount, (SELECT COUNT(*) FROM Project) as projectCount"
   ).all()
-  return results[0] || { pageCount: 0, articleCount: 0, socialCount: 0 }
+  return results[0] || { pageCount: 0, articleCount: 0, socialCount: 0, skillCount: 0, projectCount: 0 }
 }
 
 // === Social Links ===
@@ -165,4 +165,106 @@ export async function updateSocialLink(id, data) {
 export async function deleteSocialLink(id) {
   const db = getDB()
   await db.prepare('DELETE FROM SocialLink WHERE id = ?').bind(id).run()
+}
+
+// === Skills ===
+
+export async function getSkills() {
+  const db = getDB()
+  const { results } = await db.prepare('SELECT * FROM Skill ORDER BY sort_order ASC, createdAt ASC').all()
+  return results.map((r) => ({ ...r, visible: !!r.visible }))
+}
+
+export async function getVisibleSkills() {
+  const db = getDB()
+  const { results } = await db.prepare('SELECT * FROM Skill WHERE visible = 1 ORDER BY sort_order ASC').all()
+  return results.map((r) => ({ ...r, visible: true }))
+}
+
+export async function getSkillById(id) {
+  const db = getDB()
+  const r = await db.prepare('SELECT * FROM Skill WHERE id = ?').bind(id).first()
+  return r ? { ...r, visible: !!r.visible } : null
+}
+
+export async function createSkill({ name, level, sort_order, visible }) {
+  const db = getDB()
+  const id = crypto.randomUUID()
+  await db.prepare(
+    "INSERT INTO Skill (id, name, level, sort_order, visible, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, datetime('now'), datetime('now'))"
+  ).bind(id, name, level ?? 80, sort_order ?? 0, visible !== false ? 1 : 0).run()
+  return getSkillById(id)
+}
+
+export async function updateSkill(id, data) {
+  const db = getDB()
+  const sets = []
+  const vals = []
+  for (const [k, v] of Object.entries(data)) {
+    if (k === 'name') { sets.push('name = ?'); vals.push(v) }
+    else if (k === 'level') { sets.push('level = ?'); vals.push(v ?? 80) }
+    else if (k === 'sort_order') { sets.push('sort_order = ?'); vals.push(v ?? 0) }
+    else if (k === 'visible') { sets.push('visible = ?'); vals.push(v ? 1 : 0) }
+  }
+  if (!sets.length) return getSkillById(id)
+  sets.push("updatedAt = datetime('now')")
+  vals.push(id)
+  await db.prepare(`UPDATE Skill SET ${sets.join(', ')} WHERE id = ?`).bind(...vals).run()
+  return getSkillById(id)
+}
+
+export async function deleteSkill(id) {
+  const db = getDB()
+  await db.prepare('DELETE FROM Skill WHERE id = ?').bind(id).run()
+}
+
+// === Projects ===
+
+export async function getProjects() {
+  const db = getDB()
+  const { results } = await db.prepare('SELECT * FROM Project ORDER BY sort_order ASC, createdAt ASC').all()
+  return results.map((r) => ({ ...r, tech: safeJson(r.tech), visible: !!r.visible }))
+}
+
+export async function getVisibleProjects() {
+  const db = getDB()
+  const { results } = await db.prepare('SELECT * FROM Project WHERE visible = 1 ORDER BY sort_order ASC').all()
+  return results.map((r) => ({ ...r, tech: safeJson(r.tech), visible: true }))
+}
+
+export async function getProjectById(id) {
+  const db = getDB()
+  const r = await db.prepare('SELECT * FROM Project WHERE id = ?').bind(id).first()
+  return r ? { ...r, tech: safeJson(r.tech), visible: !!r.visible } : null
+}
+
+export async function createProject({ title, description, tech, link, image, sort_order, visible }) {
+  const db = getDB()
+  const id = crypto.randomUUID()
+  await db.prepare(
+    "INSERT INTO Project (id, title, description, tech, link, image, sort_order, visible, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))"
+  ).bind(id, title, description ?? null, JSON.stringify(tech ?? []), link ?? null, image ?? null, sort_order ?? 0, visible !== false ? 1 : 0).run()
+  return getProjectById(id)
+}
+
+export async function updateProject(id, data) {
+  const db = getDB()
+  const sets = []
+  const vals = []
+  for (const [k, v] of Object.entries(data)) {
+    if (k === 'title' || k === 'description' || k === 'link' || k === 'image') { sets.push(`${k} = ?`); vals.push(v ?? null) }
+    else if (k === 'tech') { sets.push('tech = ?'); vals.push(JSON.stringify(v ?? [])) }
+    else if (k === 'sort_order') { sets.push('sort_order = ?'); vals.push(v ?? 0) }
+    else if (k === 'visible') { sets.push('visible = ?'); vals.push(v ? 1 : 0) }
+  }
+  if (!sets.length) return getProjectById(id)
+  sets.push("updatedAt = datetime('now')")
+  vals.push(id)
+  await db.prepare(`UPDATE Project SET ${sets.join(', ')} WHERE id = ?`).bind(...vals).run()
+  return getProjectById(id)
+}
+
+export async function deleteProject(id) {
+  const db = getDB()
+  await db.prepare('DELETE FROM Project WHERE id = ?').bind(id).run()
 }

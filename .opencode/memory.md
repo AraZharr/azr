@@ -244,4 +244,19 @@
   - Quick Start: Prerequisites, Install, Build & Deploy, Database Schema
   - Semua social links sesuai dengan admin platforms
 
+### 2026-07-12 — Dynamic Content: Skills & Projects dari admin dashboard
+- **Aksi**: dibuat/diedit
+- **File**: migrations/0003_skill_project.sql, src/lib/d1.js, 6 API routes, 2 admin pages, 3 public components, sidebar, dashboard
+- **Detail**:
+  - **Migration**: Tabel `Skill` (name, level, sort_order, visible) + `Project` (title, description, tech, link, image, sort_order, visible)
+  - **d1.js**: +12 CRUD functions (getSkills, getVisibleSkills, getSkillById, createSkill, updateSkill, deleteSkill, getProjects, getVisibleProjects, getProjectById, createProject, updateProject, deleteProject) + updated getCounts
+  - **API admin**: `/api/admin/skills` (GET/POST) + `/api/admin/skills/[id]` (PUT/DELETE), `/api/admin/projects` (GET/POST) + `/api/admin/projects/[id]` (PUT/DELETE)
+  - **API public**: `/api/skills` (GET visible only), `/api/projects` (GET visible only), `/api/pages?slug=about` (GET published page by slug)
+  - **Admin pages**: `/admin/skills` (CRUD with level slider 0-100, toggle visible), `/admin/projects` (CRUD with tech comma-separated, link, image, toggle visible)
+  - **Public refactor**: `Skills.js` fetch dari `/api/skills`, `Projects.js` fetch dari `/api/projects`, `About.js` fetch dari `/api/pages?slug=about` (fallback ke hardcoded text jika belum ada di DB)
+  - **Sidebar**: Tambah menu Skills + Projects
+  - **Dashboard**: Tambah skillCount + projectCount stats
+  - **About fallback**: Jika page 'about' belum ada di DB, tampilkan text hardcoded sebagai default
+  - Hapus hardcoded projects (Clover Bot, Project Lainnya) — semua dari admin sekarang
+
 ## Catatan

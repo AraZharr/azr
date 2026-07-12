@@ -9,6 +9,8 @@ import {
   FileText,
   Newspaper,
   Share2,
+  BarChart3,
+  FolderKanban,
   LogOut,
   Menu,
   X,
@@ -18,6 +20,8 @@ const links = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/pages', label: 'Pages', icon: FileText },
   { href: '/admin/blog', label: 'Blog', icon: Newspaper },
+  { href: '/admin/skills', label: 'Skills', icon: BarChart3 },
+  { href: '/admin/projects', label: 'Projects', icon: FolderKanban },
   { href: '/admin/social', label: 'Social Links', icon: Share2 },
 ]
 

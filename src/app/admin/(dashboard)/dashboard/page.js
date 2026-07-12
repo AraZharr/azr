@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { FileText, Newspaper, Share2 } from 'lucide-react'
+import { FileText, Newspaper, Share2, BarChart3, FolderKanban } from 'lucide-react'
 
 export default function DashboardPage() {
-  const [stats, setStats] = useState({ pageCount: 0, articleCount: 0, socialCount: 0 })
+  const [stats, setStats] = useState({ pageCount: 0, articleCount: 0, socialCount: 0, skillCount: 0, projectCount: 0 })
   const [error, setError] = useState(null)
 
   useEffect(() => {
@@ -46,6 +46,26 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">{stats.articleCount}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center gap-3">
+            <BarChart3 className="text-gray-500" size={24} />
+            <CardTitle className="text-sm font-medium">Skills</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold">{stats.skillCount}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center gap-3">
+            <FolderKanban className="text-gray-500" size={24} />
+            <CardTitle className="text-sm font-medium">Projects</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold">{stats.projectCount}</p>
           </CardContent>
         </Card>
 

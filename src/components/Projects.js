@@ -1,21 +1,18 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 
-const projects = [
-  {
-    title: 'Clover Bot',
-    desc: 'Bot Telegram multi-provider AI dengan memori dan command routing.',
-    tech: ['Node.js', 'Gemini', 'Supabase'],
-  },
-  {
-    title: 'Project Lainnya',
-    desc: 'Berbagai project eksperimen yang sedang dikembangkan.',
-    tech: ['Next.js', 'Tailwind'],
-  },
-]
-
 export default function Projects() {
+  const [projects, setProjects] = useState([])
+
+  useEffect(() => {
+    fetch('/api/projects')
+      .then((r) => r.json())
+      .then((data) => setProjects(data))
+      .catch(() => {})
+  }, [])
+
   return (
     <section id="projects" className="max-w-4xl mx-auto px-4 py-20">
       <motion.h2
@@ -27,26 +24,38 @@ export default function Projects() {
       >
         Projects
       </motion.h2>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects.map(({ title, desc, tech }, i) => (
-          <motion.div
-            key={title}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: i * 0.15 }}
-            className="border rounded-xl p-6 hover:shadow-lg transition"
-          >
-            <h3 className="text-xl font-semibold mb-2">{title}</h3>
-            <p className="text-gray-600 mb-4">{desc}</p>
-            <div className="flex flex-wrap gap-2">
-              {tech.map((t) => (
-                <span key={t} className="text-xs bg-gray-100 px-2 py-1 rounded">{t}</span>
-              ))}
-            </div>
-          </motion.div>
-        ))}
-      </div>
+      {projects.length === 0 ? (
+        <p className="text-gray-500">Belum ada project yang ditambahkan.</p>
+      ) : (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {projects.map(({ id, title, description, tech, link }, i) => (
+            <motion.div
+              key={id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.15 }}
+              className="border rounded-xl p-6 hover:shadow-lg transition"
+            >
+              <h3 className="text-xl font-semibold mb-2">
+                {link ? (
+                  <a href={link} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                    {title}
+                  </a>
+                ) : title}
+              </h3>
+              <p className="text-gray-600 mb-4">{description}</p>
+              {tech && tech.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {tech.map((t) => (
+                    <span key={t} className="text-xs bg-gray-100 px-2 py-1 rounded">{t}</span>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          ))}
+        </div>
+      )}
     </section>
   )
 }
