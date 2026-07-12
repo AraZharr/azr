@@ -130,7 +130,11 @@ wrangler d1 execute clover-db --remote --file=./migrations/0001_init.sql
 wrangler d1 execute clover-db --remote --file=./migrations/0002_social_link.sql
 ```
 
-Ini akan membuat tabel: User, Page, BlogArticle, SocialLink.
+```bash
+wrangler d1 execute clover-db --remote --file=./migrations/0003_skill_project.sql
+```
+
+Ini akan membuat tabel: User, Page, BlogArticle, SocialLink, Skill, Project.
 
 ---
 
@@ -306,6 +310,22 @@ Kamu akan melihat:
 
 ### Sekarang kamu bisa:
 
+**Kelola Skills:**
+1. Klik **Skills** di sidebar
+2. Klik **Add Skill**
+3. Isi nama skill dan level (0-100)
+4. Atur urutan dan visibility
+5. Simpan
+6. Refresh halaman Skills — data akan muncul
+
+**Kelola Projects:**
+1. Klik **Projects** di sidebar
+2. Klik **Add Project**
+3. Isi judul, deskripsi, tech (koma-separated), link (opsional)
+4. Atur urutan dan visibility
+5. Simpan
+6. Refresh halaman utama — project akan muncul di section Projects
+
 **Kelola Social Links:**
 1. Klik **Social Links** di sidebar
 2. Klik **Add Link**
@@ -317,15 +337,15 @@ Kamu akan melihat:
 **Kelola Blog:**
 1. Klik **Blog** di sidebar
 2. Klik **New Article**
-3. Isi judul, excerpt, konten
+3. Isi judul, excerpt, konten (TipTap editor)
 4. Toggle publish/draft
 5. Simpan
 
 **Kelola Pages:**
 1. Klik **Pages** di sidebar
 2. Klik **New Page**
-3. Isi slug, title, content
-4. Simpan
+3. Isi slug, title, content (TipTap editor)
+4. Simpan — konten akan tampil di halaman yang sesuai (contoh: slug `about` untuk halaman About)
 
 ---
 
@@ -367,6 +387,11 @@ Kalau belum punya domain, website tetap bisa diakses via URL Cloudflare:
 - Login ke admin → Social Links → tambah link
 - Toggle "Tampilkan di website" = ON
 
+### Skills / Projects tidak muncul
+- Pastikan tabel Skill dan Project sudah dibuat (jalankan migrasi `0003_skill_project.sql`)
+- Login ke admin → Skills/Projects → tambah data
+- Toggle "Tampilkan di website" = ON
+
 ### Deploy gagal
 - Pastikan `wrangler login` sudah dilakukan
 - Pastikan akun Cloudflare aktif
@@ -395,6 +420,7 @@ wrangler d1 create clover-db
 # 5. Migrasi tabel
 wrangler d1 execute clover-db --remote --file=./migrations/0001_init.sql
 wrangler d1 execute clover-db --remote --file=./migrations/0002_social_link.sql
+wrangler d1 execute clover-db --remote --file=./migrations/0003_skill_project.sql
 
 # 6. Buat admin user
 wrangler d1 execute clover-db --remote --command="INSERT INTO User (id, email, password, name) VALUES (lower(hex(randomblob(16))), 'admin@arazhar.dev', 'password123', 'AraZhar')"
