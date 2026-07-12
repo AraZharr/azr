@@ -22,6 +22,7 @@
 - **Chatbot CS**: Floating bubble → popup card, Gemini + Groq auto-fallback, restricted to portfolio topics only, WhatsApp forward
 - **SEO**: JSON-LD, Open Graph, dynamic sitemap, robots.txt, per-page metadata
 - **Auth**: Custom JWT (jose) — login/logout/me API routes
+- **Social Links**: Admin CRUD → dynamic frontend icons (email, WA, IG, TikTok, Telegram, Discord, GitHub, etc.)
 
 ## Social Media
 - Email, WhatsApp, Instagram, TikTok, Telegram, Discord
@@ -185,5 +186,17 @@
 - **Aksi**: diedit
 - **File**: README.md
 - **Detail**: README dijadikan seperti SEO content — memperkenalkan AraZhar, skills, projects, layanan, kontak, dan tech stack website ini. Bukan lagi technical project README.
+
+### 2026-07-12 — Social Links: admin CRUD + dynamic frontend icons
+- **Aksi**: dibuat
+- **File**: migrations/0002_social_link.sql, src/app/api/social/route.js, src/app/api/social/[id]/route.js, src/app/admin/(dashboard)/social/page.js, src/components/SocialLinks.js, src/components/Contact.js, src/components/Footer.js, src/components/admin/Sidebar.js, src/app/admin/(dashboard)/dashboard/page.js, src/lib/d1.js
+- **Detail**:
+  - Tabel SocialLink: platform, url, label, visible, sort_order
+  - API routes: GET (public), POST/PUT/DELETE (auth)
+  - Admin page: /admin/social — add, edit, toggle visible, delete, reorder
+  - SocialLinks component: fetch dari API, render icons dengan hover colors
+  - Platforms: email, WA, IG, TikTok, Telegram, Discord, GitHub, Twitter, LinkedIn, YouTube, custom
+  - Contact.js & Footer.js: dynamic social links dari database
+  - Dashboard: tambah social link count stat
 
 ## Catatan
