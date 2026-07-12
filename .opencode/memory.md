@@ -18,6 +18,11 @@
 - `/admin/blog` — Manage blog articles
 - `/admin/login` — Admin login
 
+## Features
+- **Chatbot CS**: Floating bubble → popup card, Gemini + Groq auto-fallback, restricted to portfolio topics only, WhatsApp forward
+- **SEO**: JSON-LD, Open Graph, dynamic sitemap, robots.txt, per-page metadata
+- **Auth**: Custom JWT (jose) — login/logout/me API routes
+
 ## Changelog
 
 ### 2026-07-12 — Inisialisasi project Next.js + Tailwind
@@ -143,5 +148,32 @@
 - **Aksi**: diedit
 - **File**: src/app/api/admin/pages/[id]/route.js, src/app/api/admin/blog/[id]/route.js, src/app/api/blog/[slug]/route.js, src/app/blog/[slug]/page.js
 - **Detail**: Next.js 15 bikin `params` jadi Promise — semua akses `params.id`/`params.slug` harus `await` dulu
+
+### 2026-07-12 — Hapus semua localhost, persiapan production live
+- **Aksi**: diedit
+- **File**: .env, .env.example, README.md, .gitignore
+- **Detail**: Ganti `NEXT_PUBLIC_URL` ke production domain, hapus Supabase legacy vars, tambah `.open-next/` `.wrangler/` ke .gitignore, rewrite README untuk Cloudflare stack
+
+### 2026-07-12 — Rename AraZharr → AraZhar + SEO + Chatbot CS + WhatsApp
+- **Aksi**: diedit/dibuat
+- **File**: 13 files (semua komponen, pages, layout, README, memory.md), src/app/sitemap.js, src/app/robots.js, src/app/api/chat/route.js, src/components/ChatWidget.js
+- **Detail**:
+  - **Rename**: `AraZharr` → `AraZhar` di semua file (13 occurrences)
+  - **SEO**: metadataBase, Open Graph, Twitter Card, JSON-LD Person schema, per-page metadata dengan description
+  - **sitemap.js**: Dynamic — auto-add blog articles dari D1
+  - **robots.js**: Allow public, block `/admin/` `/api/`
+  - **Chatbot CS**: API route `/api/chat` → Gemini primary → Groq fallback → error message
+  - **ChatWidget.js**: Floating bubble 52px, card popup, typing indicator, quick replies, WhatsApp forward button
+  - **WhatsApp**: Tombol link di header chat → `wa.me` + pre-filled text dari riwayat chat
+
+### 2026-07-12 — Refine chatbot: restricted knowledge base + modern UI
+- **Aksi**: diedit
+- **File**: src/app/api/chat/route.js, src/components/ChatWidget.js, src/app/layout.js
+- **Detail**:
+  - **Knowledge base**: Seluruh konten website (about, skills, projects, layanan) di-inject ke system prompt
+  - **Restriction**: HANYA jawab pertanyaan portfolio/project/layanan. Off-topic → tolak sopan + arahkan WhatsApp
+  - **Temperature**: Diturunkan ke 0.5 (lebih fokus), max_tokens 512 (concise)
+  - **Font**: Inter via `next/font/google` + system-ui fallback
+  - **UI**: Clean card, avatar circle, bounce dot typing indicator, quick reply buttons, seamless input bar
 
 ## Catatan
