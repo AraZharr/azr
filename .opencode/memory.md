@@ -117,4 +117,12 @@
   - Console.error di authorize() untuk diagnosa di Vercel function logs
   - `secret: process.env.NEXTAUTH_SECRET` ditambahkan ke authOptions
 
+### 2026-07-12 — Install SuperAgent v3 OpenClaw sebagai opencode skills
+- **Aksi**: dibuat
+- **File**: .opencode/skills/{16 skill}/SKILL.md, .opencode/superagent-instructions.md, .opencode/opencode.json
+- **Detail**: Adaptasi SUPERAGENT-v3-OPENCLAW-HERMES.zip ke dalam format skill opencode:
+  - 16 skills (monetization, infrastructure, content-strategy, telegram-bots, data-transformation, api-integration, ai-providers, document-generation, frontend, web3, security-audit, batch-operations, nft-minter, self-audit, strategy, debug)
+  - Core identity, rules R1-R10, routing dari SOUL.md + IDENTITY.md + AGENTS.md
+  - Di-load via `skill` tool on-demand
+
 ## Catatan
