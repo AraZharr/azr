@@ -35,7 +35,9 @@ export default function LoginPage() {
     setLoading(false)
 
     if (result?.error) {
-      if (result.error === 'CredentialsSignin') {
+      if (result.url?.includes('csrf=true')) {
+        setError('Sesi kadaluarsa. Refresh halaman dan coba lagi.')
+      } else if (result.error === 'CredentialsSignin') {
         setError('Email atau password salah')
       } else {
         setError('Terjadi kesalahan. Coba lagi nanti.')

@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 
 /** NextAuth configuration — plain object, no NextAuth() call */
 export const authOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
       name: 'credentials',

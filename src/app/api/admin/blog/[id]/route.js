@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { getServerSession } from '@/lib/auth-helpers'
 import { prisma } from '@/lib/prisma'
 
+async function getSession() {
+  return getServerSession()
+}
+
 export async function GET(req, { params }) {
-  const session = await auth()
+  const session = await getSession()
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const article = await prisma.blogArticle.findUnique({ where: { id: params.id } })
@@ -13,7 +17,7 @@ export async function GET(req, { params }) {
 }
 
 export async function PUT(req, { params }) {
-  const session = await auth()
+  const session = await getSession()
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const data = await req.json()
@@ -27,7 +31,7 @@ export async function PUT(req, { params }) {
 }
 
 export async function DELETE(req, { params }) {
-  const session = await auth()
+  const session = await getSession()
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   await prisma.blogArticle.delete({ where: { id: params.id } })
