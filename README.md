@@ -1,6 +1,6 @@
 # AraZharr — Portfolio
 
-[![Vercel](https://img.shields.io/badge/deploy-vercel-black?logo=vercel)](https://clover.vercel.app)
+[![Vercel](https://img.shields.io/badge/deploy-vercel-black?logo=vercel)](https://clover-two-ashy.vercel.app)
 
 Portfolio website multi-halaman, dibangun dengan Next.js 14 + Tailwind CSS.
 
@@ -57,4 +57,4 @@ src/
 
 Auto-deploy via [Vercel](https://vercel.com) — setiap push ke `main` langsung deploy.
 
-**Live**: [clover.vercel.app](https://clover.vercel.app)
+**Live**: [clover-two-ashy.vercel.app](https://clover-two-ashy.vercel.app)

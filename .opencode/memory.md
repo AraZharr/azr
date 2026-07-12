@@ -4,6 +4,7 @@
 - **Project**: Landing page portofolio multi-halaman
 - **Tech Stack**: Next.js 14 (App Router), Tailwind CSS
 - **Deploy**: Vercel
+- **Domain**: https://clover-two-ashy.vercel.app
 
 ## Pages
 - `/` — Hero, Projects, Contact
@@ -57,5 +58,10 @@
 - **Aksi**: dibuat
 - **File**: (massal) prisma schema, auth, API routes, admin pages, blog pages, komponen
 - **Detail**: Admin dashboard (NextAuth + Prisma + Supabase), Blog CRUD (TipTap editor), public blog pages, Framer Motion animasi, shadcn/ui, Lucide icons, GitHub Action keepalive
+
+### 2026-07-12 — Setup environment Vercel
+- **Aksi**: dibuat
+- **File**: .env.example, scripts/seed.js
+- **Detail**: Template env variables + seed script untuk insert admin user
 
 ## Catatan
