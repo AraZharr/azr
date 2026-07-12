@@ -1,8 +1,11 @@
 import './globals.css'
+import { Inter } from 'next/font/google'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import ChatWidget from '@/components/ChatWidget'
 import { Toaster } from '@/components/ui/sonner'
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
 const siteUrl = process.env.NEXT_PUBLIC_URL || 'https://arazhar.dev'
 
@@ -87,7 +90,7 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="text-black bg-white antialiased">
+      <body className={`text-black bg-white antialiased ${inter.variable}`} style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif' }}>
         <Navbar />
         <main>{children}</main>
         <Footer />

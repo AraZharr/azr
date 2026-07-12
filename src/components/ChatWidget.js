@@ -1,16 +1,15 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { MessageCircle, X, Send, ExternalLink, Bot, User } from 'lucide-react'
+import { MessageCircle, X, Send, ArrowUpRight } from 'lucide-react'
 
 const WA_NUMBER = process.env.NEXT_PUBLIC_WA_NUMBER || '6281234567890'
-const WA_API = `https://wa.me/${WA_NUMBER}?text=`
 
 function buildWAText(messages) {
   const lines = messages
     .filter((m) => m.role !== 'system')
     .map((m) => {
-      const label = m.role === 'user' ? 'Pelanggan' : 'AraZhar AI'
+      const label = m.role === 'user' ? 'Saya' : 'AraZhar AI'
       return `${label}: ${m.content}`
     })
   return encodeURIComponent(
@@ -18,13 +17,19 @@ function buildWAText(messages) {
   )
 }
 
+const QUICK_REPLIES = [
+  'Apa saja skills yang dimiliki?',
+  'Ada project apa saja?',
+  'Bagaimana cara kerja sama?',
+]
+
 export default function ChatWidget() {
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
       content:
-        'Halo! Saya AI assistant AraZhar. Ada yang bisa saya bantu? Anda juga bisa langsung chat via WhatsApp.',
+        'Halo! Saya AI assistant AraZhar. Saya bisa membantu Anda mengenal portfolio, project, dan layanan yang tersedia. Ada yang ingin ditanyakan?',
     },
   ])
   const [input, setInput] = useState('')
@@ -37,14 +42,14 @@ export default function ChatWidget() {
   }, [messages])
 
   useEffect(() => {
-    if (open) inputRef.current?.focus()
+    if (open) setTimeout(() => inputRef.current?.focus(), 100)
   }, [open])
 
-  async function send() {
-    const text = input.trim()
-    if (!text || loading) return
+  async function send(text) {
+    const msg = (text || input).trim()
+    if (!msg || loading) return
 
-    const userMsg = { role: 'user', content: text }
+    const userMsg = { role: 'user', content: msg }
     const newMessages = [...messages, userMsg]
     setMessages(newMessages)
     setInput('')
@@ -58,24 +63,19 @@ export default function ChatWidget() {
       })
       const data = await res.json()
 
-      if (res.ok) {
-        setMessages([...newMessages, { role: 'assistant', content: data.reply }])
-      } else {
-        setMessages([
-          ...newMessages,
-          {
-            role: 'assistant',
-            content: data.error || 'Gagal memproses. Silakan hubungi via WhatsApp.',
-          },
-        ])
-      }
-    } catch {
       setMessages([
         ...newMessages,
         {
           role: 'assistant',
-          content: 'Koneksi error. Silakan hubungi via WhatsApp.',
+          content: res.ok
+            ? data.reply
+            : data.error || 'Gagal memproses. Silakan hubungi via WhatsApp.',
         },
+      ])
+    } catch {
+      setMessages([
+        ...newMessages,
+        { role: 'assistant', content: 'Koneksi error. Silakan hubungi via WhatsApp.' },
       ])
     } finally {
       setLoading(false)
@@ -91,87 +91,107 @@ export default function ChatWidget() {
 
   return (
     <>
-      {/* Floating button */}
+      {/* Bubble */}
       <button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-6 right-6 z-50 bg-black text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-gray-800 transition"
+        className="fixed bottom-5 right-5 z-50 w-[52px] h-[52px] rounded-full bg-black text-white flex items-center justify-center shadow-[0_4px_24px_rgba(0,0,0,0.18)] hover:scale-105 active:scale-95 transition-all duration-200"
         aria-label={open ? 'Tutup chat' : 'Buka chat'}
       >
-        {open ? <X size={24} /> : <MessageCircle size={24} />}
+        {open ? <X size={20} strokeWidth={2.2} /> : <MessageCircle size={20} strokeWidth={2.2} />}
       </button>
 
-      {/* Chat window */}
+      {/* Card */}
       {open && (
-        <div className="fixed bottom-24 right-6 z-50 w-[360px] max-w-[calc(100vw-3rem)] bg-white border rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+        <div
+          className="fixed bottom-[72px] right-5 z-50 w-[380px] max-w-[calc(100vw-2.5rem)] bg-white border border-gray-200 rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.12)] flex flex-col overflow-hidden"
+          style={{ fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}
+        >
           {/* Header */}
-          <div className="bg-black text-white px-4 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Bot size={20} />
-              <div>
-                <p className="font-semibold text-sm">AraZhar CS</p>
-                <p className="text-xs text-gray-400">Online</p>
+          <div className="px-5 py-4 border-b border-gray-100">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-black text-white flex items-center justify-center text-sm font-semibold">
+                  A
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900 leading-tight">AraZhar CS</p>
+                  <p className="text-[11px] text-gray-400 mt-0.5">Online &middot; Biasanya membalas sebentar</p>
+                </div>
               </div>
+              <a
+                href={`https://wa.me/${WA_NUMBER}?text=${buildWAText(messages)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[11px] font-medium text-green-600 hover:text-green-700 flex items-center gap-0.5 transition"
+              >
+                WhatsApp
+                <ArrowUpRight size={12} />
+              </a>
             </div>
-            <a
-              href={`${WA_API}${buildWAText(messages)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs bg-green-600 hover:bg-green-700 px-3 py-1.5 rounded-full flex items-center gap-1 transition"
-            >
-              <ExternalLink size={12} />
-              WhatsApp
-            </a>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3 max-h-80 min-h-48">
+          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 max-h-[360px] min-h-[200px]">
             {messages.map((msg, i) => (
-              <div
-                key={i}
-                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
+              <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div
-                  className={`max-w-[80%] px-3 py-2 rounded-xl text-sm ${
+                  className={`max-w-[85%] px-3.5 py-2.5 text-[13px] leading-relaxed ${
                     msg.role === 'user'
-                      ? 'bg-black text-white rounded-br-sm'
-                      : 'bg-gray-100 text-gray-800 rounded-bl-sm'
+                      ? 'bg-black text-white rounded-2xl rounded-br-md'
+                      : 'bg-gray-100 text-gray-800 rounded-2xl rounded-bl-md'
                   }`}
                 >
-                  {msg.role === 'assistant' && (
-                    <span className="text-[10px] text-gray-500 block mb-0.5">AraZhar AI</span>
-                  )}
                   {msg.content}
                 </div>
               </div>
             ))}
             {loading && (
               <div className="flex justify-start">
-                <div className="bg-gray-100 px-3 py-2 rounded-xl rounded-bl-sm text-sm text-gray-500">
-                  <span className="animate-pulse">Mengetik...</span>
+                <div className="bg-gray-100 px-4 py-3 rounded-2xl rounded-bl-md flex gap-1">
+                  <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                  <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                  <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" />
                 </div>
               </div>
             )}
             <div ref={bottomRef} />
           </div>
 
+          {/* Quick replies — tampilkan hanya di awal */}
+          {messages.length <= 1 && (
+            <div className="px-4 pb-2 flex flex-wrap gap-1.5">
+              {QUICK_REPLIES.map((qr) => (
+                <button
+                  key={qr}
+                  onClick={() => send(qr)}
+                  className="text-[11px] font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-full px-3 py-1.5 transition"
+                >
+                  {qr}
+                </button>
+              ))}
+            </div>
+          )}
+
           {/* Input */}
-          <div className="border-t p-3 flex gap-2">
-            <input
-              ref={inputRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Ketik pesan..."
-              disabled={loading}
-              className="flex-1 text-sm border rounded-lg px-3 py-2 outline-none focus:border-black disabled:opacity-50"
-            />
-            <button
-              onClick={send}
-              disabled={loading || !input.trim()}
-              className="bg-black text-white p-2 rounded-lg hover:bg-gray-800 transition disabled:opacity-50"
-            >
-              <Send size={16} />
-            </button>
+          <div className="px-4 py-3 border-t border-gray-100">
+            <div className="flex items-center gap-2 bg-gray-50 rounded-xl px-3 py-2 border border-gray-200 focus-within:border-gray-400 transition">
+              <input
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Ketik pesan..."
+                disabled={loading}
+                className="flex-1 text-[13px] bg-transparent outline-none placeholder:text-gray-400 disabled:opacity-50"
+              />
+              <button
+                onClick={() => send()}
+                disabled={loading || !input.trim()}
+                className="text-gray-400 hover:text-black transition disabled:opacity-30"
+              >
+                <Send size={16} />
+              </button>
+            </div>
           </div>
         </div>
       )}
