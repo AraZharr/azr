@@ -1,3 +1,5 @@
+import SocialLinks from '@/components/SocialLinks'
+
 export default function Contact() {
   return (
     <section className="max-w-2xl mx-auto px-4 py-20 text-center">
@@ -5,22 +7,7 @@ export default function Contact() {
       <p className="text-gray-600 mb-8">
         Ingin kerja sama atau sekadar ngobrol? Hubungi saya di bawah ini.
       </p>
-      <div className="flex justify-center gap-4">
-        <a
-          href="https://github.com/AraZhar"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block border border-black px-6 py-3 rounded-full hover:bg-black hover:text-white transition"
-        >
-          GitHub
-        </a>
-        <a
-          href="mailto:hello@arazhar.dev"
-          className="inline-block bg-black text-white px-6 py-3 rounded-full hover:bg-gray-800 transition"
-        >
-          Email
-        </a>
-      </div>
+      <SocialLinks className="justify-center" />
     </section>
   )
 }

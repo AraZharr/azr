@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { FileText, Newspaper } from 'lucide-react'
+import { FileText, Newspaper, Share2 } from 'lucide-react'
 
 export default function DashboardPage() {
-  const [stats, setStats] = useState({ pageCount: 0, articleCount: 0 })
+  const [stats, setStats] = useState({ pageCount: 0, articleCount: 0, socialCount: 0 })
   const [error, setError] = useState(null)
 
   useEffect(() => {
@@ -28,11 +28,11 @@ export default function DashboardPage() {
         </p>
       )}
 
-      <div className="grid sm:grid-cols-2 gap-4">
+      <div className="grid sm:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center gap-3">
             <FileText className="text-gray-500" size={24} />
-            <CardTitle className="text-sm font-medium">Total Pages</CardTitle>
+            <CardTitle className="text-sm font-medium">Pages</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">{stats.pageCount}</p>
@@ -42,10 +42,20 @@ export default function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center gap-3">
             <Newspaper className="text-gray-500" size={24} />
-            <CardTitle className="text-sm font-medium">Total Articles</CardTitle>
+            <CardTitle className="text-sm font-medium">Articles</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">{stats.articleCount}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center gap-3">
+            <Share2 className="text-gray-500" size={24} />
+            <CardTitle className="text-sm font-medium">Social Links</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold">{stats.socialCount}</p>
           </CardContent>
         </Card>
       </div>

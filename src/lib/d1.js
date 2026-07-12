@@ -118,7 +118,51 @@ export async function deleteArticle(id) {
 export async function getCounts() {
   const db = getDB()
   const { results } = await db.prepare(
-    "SELECT (SELECT COUNT(*) FROM Page) as pageCount, (SELECT COUNT(*) FROM BlogArticle) as articleCount"
+    "SELECT (SELECT COUNT(*) FROM Page) as pageCount, (SELECT COUNT(*) FROM BlogArticle) as articleCount, (SELECT COUNT(*) FROM SocialLink) as socialCount"
   ).all()
-  return results[0] || { pageCount: 0, articleCount: 0 }
+  return results[0] || { pageCount: 0, articleCount: 0, socialCount: 0 }
+}
+
+// === Social Links ===
+
+export async function getSocialLinks() {
+  const db = getDB()
+  const { results } = await db.prepare('SELECT * FROM SocialLink ORDER BY sort_order ASC, createdAt ASC').all()
+  return results.map((r) => ({ ...r, visible: !!r.visible }))
+}
+
+export async function getVisibleSocialLinks() {
+  const db = getDB()
+  const { results } = await db.prepare('SELECT * FROM SocialLink WHERE visible = 1 ORDER BY sort_order ASC, createdAt ASC').all()
+  return results.map((r) => ({ ...r, visible: true }))
+}
+
+export async function createSocialLink({ platform, url, label, icon, visible, sort_order }) {
+  const db = getDB()
+  const id = crypto.randomUUID()
+  await db.prepare(
+    "INSERT INTO SocialLink (id, platform, url, label, icon, visible, sort_order, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))"
+  ).bind(id, platform, url, label ?? null, icon ?? null, visible !== false ? 1 : 0, sort_order ?? 0).run()
+  return (await db.prepare('SELECT * FROM SocialLink WHERE id = ?').bind(id).first())
+}
+
+export async function updateSocialLink(id, data) {
+  const db = getDB()
+  const sets = []
+  const vals = []
+  for (const [k, v] of Object.entries(data)) {
+    if (k === 'visible') { sets.push('visible = ?'); vals.push(v ? 1 : 0) }
+    else if (k === 'sort_order') { sets.push('sort_order = ?'); vals.push(v ?? 0) }
+    else if (['platform', 'url', 'label', 'icon'].includes(k)) { sets.push(`${k} = ?`); vals.push(v ?? null) }
+  }
+  if (!sets.length) return (await db.prepare('SELECT * FROM SocialLink WHERE id = ?').bind(id).first())
+  sets.push("updatedAt = datetime('now')")
+  vals.push(id)
+  await db.prepare(`UPDATE SocialLink SET ${sets.join(', ')} WHERE id = ?`).bind(...vals).run()
+  return (await db.prepare('SELECT * FROM SocialLink WHERE id = ?').bind(id).first())
+}
+
+export async function deleteSocialLink(id) {
+  const db = getDB()
+  await db.prepare('DELETE FROM SocialLink WHERE id = ?').bind(id).run()
 }

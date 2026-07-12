@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   FileText,
   Newspaper,
+  Share2,
   LogOut,
 } from 'lucide-react'
 
@@ -14,6 +15,7 @@ const links = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/pages', label: 'Pages', icon: FileText },
   { href: '/admin/blog', label: 'Blog', icon: Newspaper },
+  { href: '/admin/social', label: 'Social Links', icon: Share2 },
 ]
 
 export default function Sidebar() {
