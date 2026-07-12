@@ -16,6 +16,7 @@
 - `/admin/dashboard` — Admin dashboard
 - `/admin/pages` — Manage pages
 - `/admin/blog` — Manage blog articles
+- `/admin/social` — Manage social links
 - `/admin/login` — Admin login
 
 ## Features
