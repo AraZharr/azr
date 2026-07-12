@@ -9,6 +9,12 @@
 - `/` — Hero, Projects, Contact
 - `/about` — About
 - `/skills` — Skills
+- `/blog` — Blog articles list
+- `/blog/[slug]` — Single article
+- `/admin/dashboard` — Admin dashboard
+- `/admin/pages` — Manage pages
+- `/admin/blog` — Manage blog articles
+- `/admin/login` — Admin login
 
 ## Changelog
 
@@ -41,5 +47,15 @@
 - **Aksi**: diedit
 - **File**: README.md
 - **Detail**: Tambah badge Vercel + link live
+
+### 2026-07-12 — Tambah .gitignore & push
+- **Aksi**: dibuat
+- **File**: .gitignore
+- **Detail**: Exclude node_modules/ dan .next/ dari git tracking. Commit ulang bersih tanpa large files. Push sukses ke GitHub.
+
+### 2026-07-12 — Setup admin dashboard + blog + animasi
+- **Aksi**: dibuat
+- **File**: (massal) prisma schema, auth, API routes, admin pages, blog pages, komponen
+- **Detail**: Admin dashboard (NextAuth + Prisma + Supabase), Blog CRUD (TipTap editor), public blog pages, Framer Motion animasi, shadcn/ui, Lucide icons, GitHub Action keepalive
 
 ## Catatan

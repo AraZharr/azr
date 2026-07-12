@@ -1,6 +1,7 @@
 import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import { Toaster } from '@/components/ui/sonner'
 
 export const metadata = {
   title: 'AraZharr — Portfolio',
@@ -14,6 +15,7 @@ export default function RootLayout({ children }) {
         <Navbar />
         <main>{children}</main>
         <Footer />
+        <Toaster />
       </body>
     </html>
   )

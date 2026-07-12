@@ -8,6 +8,7 @@ const links = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
   { href: '/skills', label: 'Skills' },
+  { href: '/blog', label: 'Blog' },
 ]
 
 export default function Navbar() {
@@ -29,7 +30,9 @@ export default function Navbar() {
               <Link
                 href={href}
                 className={`block py-1 ${
-                  pathname === href ? 'text-black font-semibold' : 'text-gray-500 hover:text-black'
+                  pathname === href || (href !== '/' && pathname.startsWith(href))
+                    ? 'text-black font-semibold'
+                    : 'text-gray-500 hover:text-black'
                 }`}
                 onClick={() => setOpen(false)}
               >

@@ -1,6 +1,50 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@layer base {
+  * {
+    border-color: var(--border-color, hsl(0 0% 90%));
+    outline-color: hsl(0 0% 50% / 0.5);
+  }
+  body {
+    background-color: var(--background, #fff);
+    color: var(--foreground, #111);
+  }
+}
+
+@theme inline {
+  --color-background: hsl(0 0% 100%);
+  --color-foreground: hsl(0 0% 9%);
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(0 0% 9%);
+  --color-popover: hsl(0 0% 100%);
+  --color-popover-foreground: hsl(0 0% 9%);
+  --color-primary: hsl(0 0% 9%);
+  --color-primary-foreground: hsl(0 0% 96%);
+  --color-secondary: hsl(0 0% 96%);
+  --color-secondary-foreground: hsl(0 0% 9%);
+  --color-muted: hsl(0 0% 96%);
+  --color-muted-foreground: hsl(0 0% 45%);
+  --color-accent: hsl(0 0% 96%);
+  --color-accent-foreground: hsl(0 0% 9%);
+  --color-destructive: hsl(0 84% 60%);
+  --color-border: hsl(0 0% 90%);
+  --color-input: hsl(0 0% 90%);
+  --color-ring: hsl(0 0% 44%);
+
+  --font-sans: ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+
+  --radius: 0.625rem;
+
+  @keyframes accordion-down {
+    from { height: 0; }
+    to { height: var(--radix-accordion-content-height, auto); }
+  }
+  @keyframes accordion-up {
+    from { height: var(--radix-accordion-content-height, auto); }
+    to { height: 0; }
+  }
+}
 
 html {
   scroll-behavior: smooth;
