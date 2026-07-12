@@ -18,7 +18,7 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b">
       <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href="/" className="font-bold text-lg">AraZharr</Link>
+        <Link href="/" className="font-bold text-lg">AraZhar</Link>
 
         <button className="sm:hidden" onClick={() => setOpen(!open)}>
           <span className="text-2xl">{open ? '✕' : '☰'}</span>

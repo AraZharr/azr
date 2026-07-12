@@ -2,7 +2,12 @@ import Link from 'next/link'
 import * as d1 from '@/lib/d1'
 
 export const dynamic = 'force-dynamic'
-export const metadata = { title: 'Blog — AraZharr' }
+export const metadata = {
+  title: 'Blog',
+  description:
+    'Blog AraZhar — Artikel tentang development, automation, AI, dan teknologi.',
+  openGraph: { title: 'Blog — AraZhar', description: 'Artikel tentang development, automation, AI, dan teknologi.' },
+}
 
 async function getArticles() {
   try {

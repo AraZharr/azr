@@ -1,8 +1,6 @@
-# AraZharr — Portfolio
+# AraZhar — Portfolio
 
-[![Vercel](https://img.shields.io/badge/deploy-vercel-black?logo=vercel)](https://clover-two-ashy.vercel.app)
-
-Portfolio website multi-halaman, dibangun dengan Next.js 14 + Tailwind CSS.
+Portfolio website multi-halaman, dibangun dengan Next.js 15 + Tailwind CSS, deployed ke Cloudflare Workers.
 
 ## Pages
 
@@ -11,50 +9,48 @@ Portfolio website multi-halaman, dibangun dengan Next.js 14 + Tailwind CSS.
 | `/` | Hero, Projects, Contact |
 | `/about` | About & pengalaman |
 | `/skills` | Tech stack & keahlian |
+| `/blog` | Blog articles |
+| `/admin` | Admin dashboard |
 
 ## Tech Stack
 
-- [Next.js 14](https://nextjs.org/) (App Router)
+- [Next.js 15](https://nextjs.org/) (App Router)
 - [Tailwind CSS](https://tailwindcss.com/)
+- [Cloudflare Workers](https://workers.cloudflare.com/) + D1 Database
+- [OpenNext](https://opennext.js.org/cloudflare)
+- JWT Auth via [jose](https://github.com/panva/jose)
 
-## Cara Jalankan
+## Development
 
 ```bash
 npm install
 npm run dev
 ```
 
-Buka [http://localhost:3000](http://localhost:3000).
-
-## Build Production
+## Production
 
 ```bash
-npm run build
-npm start
+npm run deploy
 ```
+
+Build + deploy ke Cloudflare Workers via `opennextjs-cloudflare`.
 
 ## Struktur
 
 ```
 src/
 ├── app/
-│   ├── layout.js        # layout global (Navbar + Footer)
-│   ├── page.js          # home
-│   ├── about/page.js    # about
-│   ├── skills/page.js   # skills
-│   └── globals.css
-└── components/
-    ├── Navbar.js
-    ├── Hero.js
-    ├── About.js
-    ├── Skills.js
-    ├── Projects.js
-    ├── Contact.js
-    └── Footer.js
+│   ├── layout.js
+│   ├── page.js
+│   ├── about/page.js
+│   ├── skills/page.js
+│   ├── blog/
+│   ├── admin/
+│   └── api/
+├── components/
+│   ├── admin/
+│   └── ui/
+└── lib/
+    ├── d1.js          # Cloudflare D1 CRUD
+    └── auth-cf.js     # JWT auth (jose)
 ```
-
-## Deployment
-
-Auto-deploy via [Vercel](https://vercel.com) — setiap push ke `main` langsung deploy.
-
-**Live**: [clover-two-ashy.vercel.app](https://clover-two-ashy.vercel.app)

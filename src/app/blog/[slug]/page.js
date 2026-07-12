@@ -16,7 +16,15 @@ export async function generateMetadata({ params }) {
   const { slug } = await params
   const article = await getArticle(slug)
   if (!article) return { title: 'Not Found' }
-  return { title: `${article.title} — AraZharr` }
+  return {
+    title: article.title,
+    description: article.excerpt || `${article.title} — Artikel oleh AraZhar.`,
+    openGraph: {
+      title: article.title,
+      description: article.excerpt || `${article.title} — Artikel oleh AraZhar.`,
+      type: 'article',
+    },
+  }
 }
 
 export default async function ArticlePage({ params }) {

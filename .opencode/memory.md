@@ -1,4 +1,4 @@
-# Project Clover — Portfolio AraZharr
+# Project Clover — Portfolio AraZhar
 
 ## Info
 - **Project**: Landing page portofolio multi-halaman
@@ -38,7 +38,7 @@
 ### 2026-07-12 — Buat README.md
 - **Aksi**: dibuat
 - **File**: README.md
-- **Detail**: Dokumentasi project portfolio AraZharr
+- **Detail**: Dokumentasi project portfolio AraZhar
 
 ### 2026-07-12 — Persiapan deploy ke Vercel
 - **Aksi**: dibuat

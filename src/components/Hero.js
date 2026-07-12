@@ -11,7 +11,7 @@ export default function Hero() {
         transition={{ duration: 0.6 }}
         className="text-5xl sm:text-6xl font-bold mb-4"
       >
-        AraZharr
+        AraZhar
       </motion.h1>
       <motion.p
         initial={{ opacity: 0, y: 20 }}

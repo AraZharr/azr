@@ -7,7 +7,7 @@ export default function Contact() {
       </p>
       <div className="flex justify-center gap-4">
         <a
-          href="https://github.com/AraZharr"
+          href="https://github.com/AraZhar"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block border border-black px-6 py-3 rounded-full hover:bg-black hover:text-white transition"
@@ -15,7 +15,7 @@ export default function Contact() {
           GitHub
         </a>
         <a
-          href="mailto:hello@arazharr.dev"
+          href="mailto:hello@arazhar.dev"
           className="inline-block bg-black text-white px-6 py-3 rounded-full hover:bg-gray-800 transition"
         >
           Email
