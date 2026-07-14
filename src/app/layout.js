@@ -40,7 +40,7 @@ export const metadata = {
       'Portfolio pribadi AraZhar — Developer, kreator digital. Membangun solusi web, bot, dan automation yang berdampak.',
     images: [
       {
-        url: '/og.png',
+        url: '/api/og',
         width: 1200,
         height: 630,
         alt: 'AraZhar Portfolio',
@@ -52,7 +52,7 @@ export const metadata = {
     title: 'AraZhar — Developer & Creator',
     description:
       'Portfolio pribadi AraZhar — Developer, kreator digital.',
-    images: ['/og.png'],
+    images: ['/api/og'],
   },
   robots: {
     index: true,
