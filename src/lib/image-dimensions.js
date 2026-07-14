@@ -73,20 +73,17 @@ function parseJPEG(buf) {
 
 function parseWebP(buf) {
   if (buf.length < 30) return { width: 0, height: 0 }
-  // VP8/VP8L/VP8X chunks
   const riffTag = buf.toString('ascii', 0, 4)
   const webpTag = buf.toString('ascii', 8, 12)
   if (riffTag !== 'RIFF' || webpTag !== 'WEBP') return { width: 0, height: 0 }
 
   const format = buf.toString('ascii', 12, 16)
   if (format === 'VP8 ' && buf.length >= 26) {
-    // VP8 lossy: frame header at offset 20
     const w = buf.readUInt16LE(24) & 0x3fff
     const h = buf.readUInt16LE(26) & 0x3fff
     return { width: w, height: h }
   }
   if (format === 'VP8L' && buf.length >= 25) {
-    // VP8L lossless: width/height at offset 21
     const bits = buf.readUInt32LE(21)
     return {
       width: (bits & 0x3fff) + 1,
@@ -94,11 +91,10 @@ function parseWebP(buf) {
     }
   }
   if (format === 'VP8X' && buf.length >= 30) {
-    // VP8X extended
-    const bits = buf.readUInt24LE(24)
+    // VP8X extended: width=3 bytes at offset 24, height=3 bytes at offset 27
     return {
-      width: (bits & 0xffffff) + 1,
-      height: ((bits >> 24) & 0xffffff) + 1,
+      width: buf.readUIntLE(24, 3) + 1,
+      height: buf.readUIntLE(27, 3) + 1,
     }
   }
   return { width: 0, height: 0 }
