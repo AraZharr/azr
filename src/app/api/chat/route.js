@@ -8,8 +8,8 @@ const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash'
 const GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile'
 
 const SITE_KNOWLEDGE = `
-=== WEBSITE: ARAZHAR PORTFOLIO ===
-URL: arazhar.dev
+=== CLOVER PORTFOLIO ===
+URL: clover.azhr.workers.dev
 
 == TENTANG ==
 AraZhar adalah developer & creator digital Indonesia.
