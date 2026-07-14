@@ -15,7 +15,7 @@ export async function POST(req) {
   const session = await getSession()
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { slug, title, excerpt, content, published, image } = await req.json()
-  const article = await d1.createArticle({ slug, title, excerpt, content, published, image })
+  const { slug, title, excerpt, content, published, image, meta_title, meta_description, og_image, keywords, noindex } = await req.json()
+  const article = await d1.createArticle({ slug, title, excerpt, content, published, image, meta_title, meta_description, og_image, keywords, noindex })
   return NextResponse.json(article)
 }

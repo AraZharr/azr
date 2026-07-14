@@ -30,12 +30,12 @@ export async function getPageById(id) {
   return toPage(await db.prepare('SELECT * FROM Page WHERE id = ?').bind(id).first())
 }
 
-export async function createPage({ slug, title, content }) {
+export async function createPage({ slug, title, content, meta_title, meta_description, og_image, keywords, noindex }) {
   const db = getDB()
   const id = crypto.randomUUID()
   await db.prepare(
-    "INSERT INTO Page (id, slug, title, content, published, updatedAt) VALUES (?, ?, ?, ?, 1, datetime('now'))"
-  ).bind(id, slug, title, JSON.stringify(content ?? {})).run()
+    "INSERT INTO Page (id, slug, title, content, published, meta_title, meta_description, og_image, keywords, noindex, updatedAt) VALUES (?, ?, ?, ?, 1, ?, ?, ?, ?, ?, datetime('now'))"
+  ).bind(id, slug, title, JSON.stringify(content ?? {}), meta_title ?? null, meta_description ?? null, og_image ?? null, keywords ?? null, noindex ? 1 : 0).run()
   return getPageById(id)
 }
 
@@ -46,7 +46,8 @@ export async function updatePage(id, data) {
   for (const [k, v] of Object.entries(data)) {
     if (k === 'content') { sets.push('content = ?'); vals.push(JSON.stringify(v)) }
     else if (k === 'published') { sets.push('published = ?'); vals.push(v ? 1 : 0) }
-    else if (k === 'slug' || k === 'title') { sets.push(`${k} = ?`); vals.push(v) }
+    else if (k === 'noindex') { sets.push('noindex = ?'); vals.push(v ? 1 : 0) }
+    else if (['slug', 'title', 'meta_title', 'meta_description', 'og_image', 'keywords'].includes(k)) { sets.push(`${k} = ?`); vals.push(v) }
   }
   if (!sets.length) return getPageById(id)
   sets.push("updatedAt = datetime('now')")
@@ -84,13 +85,13 @@ export async function getArticleById(id) {
   return toArticle(await db.prepare('SELECT * FROM BlogArticle WHERE id = ?').bind(id).first())
 }
 
-export async function createArticle({ slug, title, excerpt, content, published, image }) {
+export async function createArticle({ slug, title, excerpt, content, published, image, meta_title, meta_description, og_image, keywords, noindex }) {
   const db = getDB()
   const id = crypto.randomUUID()
   await db.prepare(
-    `INSERT INTO BlogArticle (id, slug, title, excerpt, content, published, image, createdAt, updatedAt)
-     VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))`
-  ).bind(id, slug, title, excerpt ?? null, JSON.stringify(content ?? {}), published ? 1 : 0, image ?? null).run()
+    `INSERT INTO BlogArticle (id, slug, title, excerpt, content, published, image, meta_title, meta_description, og_image, keywords, noindex, createdAt, updatedAt)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))`
+  ).bind(id, slug, title, excerpt ?? null, JSON.stringify(content ?? {}), published ? 1 : 0, image ?? null, meta_title ?? null, meta_description ?? null, og_image ?? null, keywords ?? null, noindex ? 1 : 0).run()
   return getArticleById(id)
 }
 
@@ -101,7 +102,8 @@ export async function updateArticle(id, data) {
   for (const [k, v] of Object.entries(data)) {
     if (k === 'content') { sets.push('content = ?'); vals.push(JSON.stringify(v)) }
     else if (k === 'published') { sets.push('published = ?'); vals.push(v ? 1 : 0) }
-    else if (['slug', 'title', 'excerpt', 'image'].includes(k)) { sets.push(`${k} = ?`); vals.push(v ?? null) }
+    else if (['slug', 'title', 'excerpt', 'image', 'meta_title', 'meta_description', 'og_image', 'keywords'].includes(k)) { sets.push(`${k} = ?`); vals.push(v ?? null) }
+    else if (k === 'noindex') { sets.push('noindex = ?'); vals.push(v ? 1 : 0) }
   }
   if (!sets.length) return getArticleById(id)
   sets.push("updatedAt = datetime('now')")

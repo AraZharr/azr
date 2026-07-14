@@ -11,6 +11,7 @@ import {
   Share2,
   BarChart3,
   FolderKanban,
+  Image,
   LogOut,
   Menu,
   X,
@@ -23,6 +24,7 @@ const links = [
   { href: '/admin/skills', label: 'Skills', icon: BarChart3 },
   { href: '/admin/projects', label: 'Projects', icon: FolderKanban },
   { href: '/admin/social', label: 'Social Links', icon: Share2 },
+  { href: '/admin/media', label: 'Media', icon: Image },
 ]
 
 export default function Sidebar() {

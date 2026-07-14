@@ -14,3 +14,7 @@ WA_NUMBER = "6281234567890"
 binding = "DB"
 database_name = "clover-db"
 database_id = "c19b5005-10aa-4084-a168-2a165f935f4e"
+
+[[r2_buckets]]
+binding = "IMAGES"
+bucket_name = "clover-images"
