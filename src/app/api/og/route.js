@@ -1,7 +1,5 @@
 // OG Image generator — returns SVG as image
 // Fully self-contained, no deps needed
-export const runtime = 'edge'
-export const dynamic = 'force-static'
 
 export async function GET() {
   const siteUrl = process.env.NEXT_PUBLIC_URL || 'https://clover.azhr.workers.dev'
