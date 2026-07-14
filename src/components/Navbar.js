@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react'
 
 const links = [
   { href: '/', label: 'Home' },
+  { href: '/#cv', label: 'CV' },
   { href: '/about', label: 'About' },
   { href: '/skills', label: 'Skills' },
   { href: '/blog', label: 'Blog' },
@@ -48,11 +49,20 @@ export default function Navbar() {
               <Link
                 href={href}
                 className={`block py-1 ${
-                  pathname === href || (href !== '/' && pathname.startsWith(href))
+                  pathname === href || (href !== '/' && pathname.startsWith(href) && !href.startsWith('/#'))
                     ? 'text-black font-semibold'
                     : 'text-gray-500 hover:text-black'
                 }`}
-                onClick={() => setOpen(false)}
+                onClick={(e) => {
+                  setOpen(false)
+                  // Smooth scroll for same-page hash links
+                  if (href.startsWith('/#')) {
+                    e.preventDefault()
+                    const id = href.replace('/#', '')
+                    const el = document.getElementById(id)
+                    if (el) el.scrollIntoView({ behavior: 'smooth' })
+                  }
+                }}
               >
                 {label}
               </Link>

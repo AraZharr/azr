@@ -47,7 +47,7 @@ export default function CVSection({ initialSlug }) {
   if (list.length === 0) return null
 
   return (
-    <section className="max-w-2xl mx-auto px-4 py-20">
+    <section id="cv" className="max-w-2xl mx-auto px-4 py-20">
       {/* Tab pills */}
       {list.length > 1 && (
         <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-none">
