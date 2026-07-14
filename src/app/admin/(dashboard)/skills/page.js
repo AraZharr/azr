@@ -138,18 +138,18 @@ export default function SkillsPage() {
       ) : (
         <div className="space-y-2">
           {skills.map((skill) => (
-            <div key={skill.id} className="flex items-center gap-3 border rounded-lg px-4 py-3 bg-white">
-              <GripVertical size={16} className="text-gray-300" />
+            <div key={skill.id} className="flex items-start gap-2 border rounded-lg px-3 py-3 bg-white sm:items-center sm:gap-3 sm:px-4">
+              <GripVertical size={16} className="text-gray-300 mt-0.5 shrink-0 sm:mt-0" />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">{skill.name}</span>
-                  <span className="text-xs text-gray-400">{skill.level}%</span>
+                  <span className="text-sm font-medium truncate">{skill.name}</span>
+                  <span className="text-xs text-gray-400 shrink-0">{skill.level}%</span>
                   {!skill.visible && (
-                    <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">hidden</span>
+                    <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded shrink-0">hidden</span>
                   )}
                 </div>
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 shrink-0">
                 <button
                   onClick={() => toggleVisible(skill.id, skill.visible)}
                   className="p-1.5 text-gray-400 hover:text-black transition"

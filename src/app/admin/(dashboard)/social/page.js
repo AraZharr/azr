@@ -195,18 +195,18 @@ export default function SocialLinksPage() {
       ) : (
         <div className="space-y-2">
           {links.map((link) => (
-            <div key={link.id} className="flex items-center gap-3 border rounded-lg px-4 py-3 bg-white">
-              <GripVertical size={16} className="text-gray-300" />
+            <div key={link.id} className="flex items-start gap-2 border rounded-lg px-3 py-3 bg-white sm:items-center sm:gap-3 sm:px-4">
+              <GripVertical size={16} className="text-gray-300 mt-0.5 shrink-0 sm:mt-0" />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium capitalize">{link.platform}</span>
+                  <span className="text-sm font-medium capitalize truncate">{link.platform}</span>
                   {!link.visible && (
-                    <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">hidden</span>
+                    <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded shrink-0">hidden</span>
                   )}
                 </div>
                 <p className="text-xs text-gray-500 truncate">{link.url}</p>
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 shrink-0">
                 <button
                   onClick={() => toggleVisible(link.id, link.visible)}
                   className="p-1.5 text-gray-400 hover:text-black transition"

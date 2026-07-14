@@ -216,25 +216,27 @@ export default function ProjectsPage() {
       ) : (
         <div className="space-y-2">
           {projects.map((project) => (
-            <div key={project.id} className="flex items-center gap-3 border rounded-lg px-4 py-3 bg-white">
-              <GripVertical size={16} className="text-gray-300" />
+            <div key={project.id} className="flex items-start gap-2 border rounded-lg px-3 py-3 bg-white sm:items-center sm:gap-3 sm:px-4">
+              <GripVertical size={16} className="text-gray-300 mt-0.5 shrink-0 sm:mt-0" />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">{project.title}</span>
+                  <span className="text-sm font-medium truncate">{project.title}</span>
                   {!project.visible && (
-                    <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">hidden</span>
+                    <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded shrink-0">hidden</span>
                   )}
                 </div>
-                <p className="text-xs text-gray-500 truncate">{project.description}</p>
+                {project.description && (
+                  <p className="text-xs text-gray-500 line-clamp-2">{project.description}</p>
+                )}
                 {project.tech && project.tech.length > 0 && (
                   <div className="flex flex-wrap gap-1 mt-1">
                     {project.tech.map((t) => (
-                      <span key={t} className="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded">{t}</span>
+                      <span key={t} className="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded whitespace-nowrap">{t}</span>
                     ))}
                   </div>
                 )}
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 shrink-0">
                 <button
                   onClick={() => toggleVisible(project.id, project.visible)}
                   className="p-1.5 text-gray-400 hover:text-black transition"
