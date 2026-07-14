@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import * as d1 from '@/lib/d1'
 
 export const dynamic = 'force-dynamic'
