@@ -304,6 +304,74 @@ export async function upsertSettings(data) {
   return getSettings()
 }
 
+// === CV (multi-CV) ===
+
+function toCV(r) {
+  if (!r) return null
+  return { ...r, published: !!r.published, data: safeJson(r.data) }
+}
+
+export async function getCVList() {
+  const db = getDB()
+  const { results } = await db.prepare('SELECT * FROM CV ORDER BY sort_order ASC, createdAt ASC').all()
+  return results.map(toCV)
+}
+
+export async function getVisibleCV() {
+  const db = getDB()
+  const { results } = await db.prepare('SELECT * FROM CV WHERE published = 1 ORDER BY sort_order ASC').all()
+  return results.map(toCV)
+}
+
+export async function getCVById(id) {
+  const db = getDB()
+  return toCV(await db.prepare('SELECT * FROM CV WHERE id = ?').bind(id).first())
+}
+
+export async function getCVBySlug(slug) {
+  const db = getDB()
+  return toCV(await db.prepare('SELECT * FROM CV WHERE slug = ?').bind(slug).first())
+}
+
+export async function createCV({ title, slug, data, published, sort_order }) {
+  const db = getDB()
+  const id = crypto.randomUUID()
+  await db.prepare(
+    "INSERT INTO CV (id, title, slug, data, published, sort_order, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))"
+  ).bind(id, title, slug, JSON.stringify(data ?? {}), published ? 1 : 0, sort_order ?? 0).run()
+  return getCVById(id)
+}
+
+export async function updateCV(id, fields) {
+  const db = getDB()
+  const sets = []
+  const vals = []
+  for (const [k, v] of Object.entries(fields)) {
+    if (k === 'title') { sets.push('title = ?'); vals.push(v) }
+    else if (k === 'slug') { sets.push('slug = ?'); vals.push(v) }
+    else if (k === 'data') { sets.push('data = ?'); vals.push(JSON.stringify(v ?? {})) }
+    else if (k === 'published') { sets.push('published = ?'); vals.push(v ? 1 : 0) }
+    else if (k === 'sort_order') { sets.push('sort_order = ?'); vals.push(v ?? 0) }
+  }
+  if (!sets.length) return getCVById(id)
+  sets.push("updatedAt = datetime('now')")
+  vals.push(id)
+  await db.prepare(`UPDATE CV SET ${sets.join(', ')} WHERE id = ?`).bind(...vals).run()
+  return getCVById(id)
+}
+
+export async function deleteCV(id) {
+  const db = getDB()
+  await db.prepare('DELETE FROM CV WHERE id = ?').bind(id).run()
+}
+
+export async function reorderCV(ids) {
+  const db = getDB()
+  for (let i = 0; i < ids.length; i++) {
+    await db.prepare('UPDATE CV SET sort_order = ?, updatedAt = datetime(\'now\') WHERE id = ?').bind(i, ids[i]).run()
+  }
+}
+
 export async function checkRateLimit(key, limit, windowSeconds) {
   const db = getDB()
   const now = Date.now()
