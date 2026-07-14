@@ -1,5 +1,5 @@
 import * as d1 from '@/lib/d1'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import TipTapRenderer from '@/components/TipTapRenderer'
 
 export const dynamic = 'force-dynamic'
@@ -14,6 +14,7 @@ async function getArticle(slug) {
 
 export async function generateMetadata({ params }) {
   const { slug } = await params
+  if (slug.startsWith('http')) return { title: 'Redirecting…' }
   const article = await getArticle(slug)
   if (!article) return { title: 'Not Found' }
   return {
@@ -29,6 +30,12 @@ export async function generateMetadata({ params }) {
 
 export default async function ArticlePage({ params }) {
   const { slug } = await params
+
+  // Link post — slug is a URL, redirect there
+  if (slug.startsWith('http')) {
+    redirect(slug)
+  }
+
   const article = await getArticle(slug)
 
   if (!article) notFound()
