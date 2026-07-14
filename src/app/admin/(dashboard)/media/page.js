@@ -5,6 +5,14 @@ import { Button } from '@/components/ui/button'
 import { Trash2, Copy, Upload, ExternalLink, FileImage } from 'lucide-react'
 import { toast } from 'sonner'
 
+const FORMAT_BADGES = {
+  'image/jpeg': { label: 'JPEG', color: 'bg-blue-50 text-blue-700' },
+  'image/png': { label: 'PNG', color: 'bg-green-50 text-green-700' },
+  'image/webp': { label: 'WebP', color: 'bg-purple-50 text-purple-700' },
+  'image/gif': { label: 'GIF', color: 'bg-pink-50 text-pink-700' },
+  'image/avif': { label: 'AVIF', color: 'bg-orange-50 text-orange-700' },
+}
+
 export default function MediaPage() {
   const [images, setImages] = useState([])
   const [loading, setLoading] = useState(true)
@@ -29,13 +37,16 @@ export default function MediaPage() {
     if (!files.length) return
     setUploading(true)
 
+    let ok = 0, fail = 0
     for (const file of files) {
       if (!['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif'].includes(file.type)) {
         toast.error(`${file.name}: format not supported`)
+        fail++
         continue
       }
       if (file.size > 10 * 1024 * 1024) {
         toast.error(`${file.name}: max 10MB`)
+        fail++
         continue
       }
 
@@ -44,15 +55,18 @@ export default function MediaPage() {
 
       try {
         const res = await fetch('/api/admin/media', { method: 'POST', body: fd })
-        if (res.ok) toast.success(`${file.name} uploaded`)
-        else toast.error(`${file.name}: upload failed`)
+        if (res.ok) ok++
+        else fail++
       } catch {
-        toast.error(`${file.name}: upload error`)
+        fail++
       }
     }
 
+    if (ok > 0) toast.success(`${ok} file uploaded`)
+    if (fail > 0) toast.error(`${fail} file failed`)
+
     setUploading(false)
-    inputRef.current.value = ''
+    if (inputRef.current) inputRef.current.value = ''
     fetchImages()
   }
 
@@ -81,6 +95,7 @@ export default function MediaPage() {
   }
 
   function formatSize(bytes) {
+    if (!bytes) return ''
     if (bytes < 1024) return `${bytes}B`
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)}KB`
     return `${(bytes / (1024 * 1024)).toFixed(1)}MB`
@@ -135,41 +150,62 @@ export default function MediaPage() {
           <p className="text-sm">No images yet</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {images.map((img) => {
-            const w = img.customMetadata?.width ? parseInt(img.customMetadata.width) : 0
-            const h = img.customMetadata?.height ? parseInt(img.customMetadata.height) : 0
+            const badge = FORMAT_BADGES[img.mimeType] || { label: img.mimeType?.split('/')[1]?.toUpperCase() || '?', color: 'bg-gray-50 text-gray-600' }
+            const ratio = formatRatio(img.width, img.height)
             return (
-              <div key={img.key} className="group relative border rounded-lg overflow-hidden bg-gray-50">
+              <div key={img.key} className="group relative border rounded-lg overflow-hidden bg-white hover:shadow-md transition-shadow">
+                {/* Thumbnail */}
                 <div className="aspect-[4/3] overflow-hidden bg-gray-100">
                   <img
-                    src={`/api/admin/media/${img.key}`}
+                    src={img.url}
                     alt={img.originalName || img.key}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                     loading="lazy"
                   />
                 </div>
-                <div className="p-2 text-[11px] text-gray-500 space-y-0.5">
-                  {w > 0 && h > 0 && (
-                    <p className="font-medium text-gray-700">
-                      {w}×{h} <span className="text-gray-400">({formatRatio(w, h)})</span>
-                    </p>
+
+                {/* Metadata */}
+                <div className="p-2.5 space-y-1.5">
+                  {/* Format badge */}
+                  <div className="flex items-center justify-between">
+                    <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${badge.color}`}>
+                      {badge.label}
+                    </span>
+                    <span className="text-[10px] text-gray-400">
+                      {formatSize(img.size)}
+                    </span>
+                  </div>
+
+                  {/* Dimensions + ratio */}
+                  {img.width > 0 && img.height > 0 && (
+                    <div className="text-[11px] text-gray-600 flex items-center gap-1">
+                      <span className="font-medium">{img.width}×{img.height}</span>
+                      <span className="text-gray-300">·</span>
+                      <span className="text-gray-400">{ratio}</span>
+                    </div>
                   )}
-                  <p>{formatSize(img.size)}</p>
+
+                  {/* File name */}
+                  <p className="text-[10px] text-gray-400 truncate" title={img.originalName}>
+                    {img.originalName}
+                  </p>
                 </div>
+
                 {/* Actions overlay */}
                 <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition">
                   <button
-                    onClick={() => copyUrl(`/api/admin/media/${img.key}`)}
+                    onClick={() => copyUrl(img.url)}
                     className="bg-white/90 hover:bg-white rounded-full p-1.5 shadow-sm text-gray-600 hover:text-black"
                     title="Copy URL"
                   >
                     <Copy size={12} />
                   </button>
                   <button
-                    onClick={() => window.open(`/api/admin/media/${img.key}`, '_blank')}
+                    onClick={() => window.open(img.url, '_blank')}
                     className="bg-white/90 hover:bg-white rounded-full p-1.5 shadow-sm text-gray-600 hover:text-black"
-                    title="Open in new tab"
+                    title="Open"
                   >
                     <ExternalLink size={12} />
                   </button>
@@ -180,10 +216,6 @@ export default function MediaPage() {
                   >
                     <Trash2 size={12} />
                   </button>
-                </div>
-                {/* File name */}
-                <div className="px-2 pb-2 text-[10px] text-gray-400 truncate" title={img.key}>
-                  {img.customMetadata?.originalName || img.key}
                 </div>
               </div>
             )

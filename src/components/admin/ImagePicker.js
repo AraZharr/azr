@@ -37,8 +37,7 @@ export default function ImagePicker({ open, onClose, onSelect }) {
         const data = await res.json()
         toast.success('Uploaded')
         fetchImages()
-        // Auto-select the uploaded image
-        onSelect(`/api/admin/media/${data.key}`)
+        onSelect(data.url)
         onClose()
       } else {
         toast.error('Upload failed')
@@ -59,12 +58,10 @@ export default function ImagePicker({ open, onClose, onSelect }) {
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b">
           <h2 className="font-semibold text-lg">Select Image</h2>
-          <div className="flex items-center gap-2">
-            <label className="cursor-pointer">
+          <div className="flex items-center gap-3">
+            <label className="cursor-pointer text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1">
               <input type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif" className="hidden" onChange={handleUpload} />
-              <span className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1">
-                <Upload size={14} /> Upload
-              </span>
+              <Upload size={14} /> Upload
             </label>
             <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded">
               <X size={18} />
@@ -86,18 +83,27 @@ export default function ImagePicker({ open, onClose, onSelect }) {
               {images.map((img) => (
                 <button
                   key={img.key}
-                  onClick={() => { onSelect(`/api/admin/media/${img.key}`); onClose() }}
+                  onClick={() => { onSelect(img.url); onClose() }}
                   className="group relative aspect-square rounded-lg overflow-hidden bg-gray-100 border hover:border-black transition"
                 >
                   <img
-                    src={`/api/admin/media/${img.key}`}
+                    src={img.url}
                     alt=""
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />
+                  {/* Hover overlay */}
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition flex items-center justify-center">
                     <Check size={24} className="text-white opacity-0 group-hover:opacity-100 drop-shadow-lg" />
                   </div>
+                  {/* Metadata bottom */}
+                  {img.width > 0 && img.height > 0 && (
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent px-2 pb-1.5 pt-5 opacity-0 group-hover:opacity-100 transition">
+                      <p className="text-[10px] text-white font-medium">
+                        {img.width}×{img.height}
+                      </p>
+                    </div>
+                  )}
                 </button>
               ))}
             </div>

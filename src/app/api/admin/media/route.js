@@ -4,6 +4,13 @@ import { getCloudflareContext } from '@opennextjs/cloudflare'
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif']
 const MAX_SIZE = 10 * 1024 * 1024 // 10MB
+const TYPE_LABELS = {
+  'image/jpeg': 'JPEG',
+  'image/png': 'PNG',
+  'image/webp': 'WebP',
+  'image/gif': 'GIF',
+  'image/avif': 'AVIF',
+}
 
 export async function GET() {
   const session = await getSession()
@@ -13,16 +20,36 @@ export async function GET() {
     const { env } = getCloudflareContext()
     const objects = await env.IMAGES.list()
 
-    const images = objects.objects
-      .filter((o) => o.key !== '')
-      .map((o) => ({
+    const images = []
+    for (const o of objects.objects) {
+      if (o.key === '') continue
+
+      // Fetch metadata per object via head
+      let width = 0, height = 0, mimeType = '', originalName = ''
+      try {
+        const head = await env.IMAGES.head(o.key)
+        if (head) {
+          mimeType = head.httpMetadata?.contentType || ''
+          originalName = head.customMetadata?.originalName || o.key
+          width = parseInt(head.customMetadata?.width || '0')
+          height = parseInt(head.customMetadata?.height || '0')
+        }
+      } catch {}
+
+      images.push({
         key: o.key,
         size: o.size,
         uploaded: o.uploaded,
-        url: `https://clover-images.${env.ACCOUNT_ID}.r2.dev/${o.key}`,
-      }))
-      .sort((a, b) => new Date(b.uploaded) - new Date(a.uploaded))
+        width,
+        height,
+        mimeType,
+        originalName,
+        url: `/api/admin/media/${o.key}`,
+        dims: width > 0 && height > 0 ? `${width}×${height}` : '',
+      })
+    }
 
+    images.sort((a, b) => new Date(b.uploaded) - new Date(a.uploaded))
     return NextResponse.json(images)
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 })
@@ -50,7 +77,7 @@ export async function POST(req) {
 
     // Get dimensions
     let width = 0, height = 0
-    if (file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/webp') {
+    if (['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
       const { getImageDimensions } = await import('@/lib/image-dimensions')
       const dims = getImageDimensions(Buffer.from(buffer), file.type)
       width = dims.width
