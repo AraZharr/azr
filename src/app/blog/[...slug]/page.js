@@ -13,7 +13,8 @@ async function getArticle(slug) {
 }
 
 export async function generateMetadata({ params }) {
-  const { slug } = await params
+  const segments = await params
+  const slug = Array.isArray(segments.slug) ? segments.slug.join('/') : segments.slug
   if (slug.startsWith('http')) return { title: 'Redirecting…' }
   const article = await getArticle(slug)
   if (!article) return { title: 'Not Found' }
@@ -29,7 +30,8 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ArticlePage({ params }) {
-  const { slug } = await params
+  const segments = await params
+  const slug = Array.isArray(segments.slug) ? segments.slug.join('/') : segments.slug
 
   // Link post — slug is a URL, redirect there
   if (slug.startsWith('http')) {

@@ -13,6 +13,7 @@ export default async function sitemap() {
   try {
     const articles = await d1.getPublishedArticles()
     for (const article of articles) {
+      if (article.slug?.startsWith('http')) continue
       routes.push({
         url: `${baseUrl}/blog/${article.slug}`,
         lastModified: new Date(article.updatedAt || article.createdAt),
