@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Trash2, Copy, Upload, ExternalLink, FileImage } from 'lucide-react'
 import { toast } from 'sonner'
 import { compressImage } from '@/lib/compress-image'
+import MediaViewer from '@/components/admin/MediaViewer'
 
 const FORMAT_BADGES = {
   'image/jpeg': { label: 'JPEG', color: 'bg-blue-50 text-blue-700' },
@@ -18,6 +19,7 @@ export default function MediaPage() {
   const [images, setImages] = useState([])
   const [loading, setLoading] = useState(true)
   const [uploading, setUploading] = useState(false)
+  const [viewerImage, setViewerImage] = useState(null)
   const inputRef = useRef(null)
 
   const fetchImages = useCallback(async () => {
@@ -158,7 +160,9 @@ export default function MediaPage() {
             const badge = FORMAT_BADGES[img.mimeType] || { label: img.mimeType?.split('/')[1]?.toUpperCase() || '?', color: 'bg-gray-50 text-gray-600' }
             const ratio = formatRatio(img.width, img.height)
             return (
-              <div key={img.key} className="group relative border rounded-lg overflow-hidden bg-white hover:shadow-md transition-shadow">
+              <div key={img.key} className="group relative border rounded-lg overflow-hidden bg-white hover:shadow-md transition-shadow cursor-pointer"
+            onClick={() => setViewerImage(img)}
+          >
                 {/* Thumbnail */}
                 <div className="aspect-[4/3] overflow-hidden bg-gray-100">
                   <img
@@ -199,21 +203,21 @@ export default function MediaPage() {
                 {/* Actions overlay */}
                 <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition">
                   <button
-                    onClick={() => copyUrl(img.url)}
+                    onClick={(e) => { e.stopPropagation(); copyUrl(img.url) }}
                     className="bg-white/90 hover:bg-white rounded-full p-1.5 shadow-sm text-gray-600 hover:text-black"
                     title="Copy URL"
                   >
                     <Copy size={12} />
                   </button>
                   <button
-                    onClick={() => window.open(img.url, '_blank')}
+                    onClick={(e) => { e.stopPropagation(); window.open(img.url, '_blank') }}
                     className="bg-white/90 hover:bg-white rounded-full p-1.5 shadow-sm text-gray-600 hover:text-black"
                     title="Open"
                   >
                     <ExternalLink size={12} />
                   </button>
                   <button
-                    onClick={() => handleDelete(img.key)}
+                    onClick={(e) => { e.stopPropagation(); handleDelete(img.key) }}
                     className="bg-white/90 hover:bg-white rounded-full p-1.5 shadow-sm text-red-500 hover:text-red-700"
                     title="Delete"
                   >
@@ -224,6 +228,21 @@ export default function MediaPage() {
             )
           })}
         </div>
+      )}
+
+      {/* Viewer modal */}
+      {viewerImage && (
+        <MediaViewer
+          image={viewerImage}
+          onClose={() => setViewerImage(null)}
+          onDelete={(key) => {
+            setViewerImage(null)
+            handleDelete(key)
+          }}
+          onRename={(key, newName) => {
+            setImages((prev) => prev.map((img) => img.key === key ? { ...img, originalName: newName } : img))
+          }}
+        />
       )}
     </div>
   )
