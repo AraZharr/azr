@@ -4,15 +4,26 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
-import { useEffect, useState, useRef } from 'react'
-import { Bold, Italic, Heading2, List, Quote, ImageIcon, Link2, Undo, Redo, Upload } from 'lucide-react'
+import { useEffect, useState, useRef, useCallback } from 'react'
+import { Bold, Italic, Heading2, List, Quote, ImageIcon, Link2, Undo, Redo } from 'lucide-react'
 import { compressImage } from '@/lib/compress-image'
 import { toast } from 'sonner'
 
 export default function TipTapEditor({ content, onChange }) {
   const [linkInput, setLinkInput] = useState(false)
   const [linkUrl, setLinkUrl] = useState('')
+  // Force re-render on every editor state change so toolbar indicators update immediately
+  const [, forceRender] = useState(0)
   const uploadRef = useRef(null)
+
+  const handleUpdate = useCallback(({ editor }) => {
+    onChange(editor.getJSON())
+    forceRender((n) => n + 1)
+  }, [onChange])
+
+  const handleSelectionUpdate = useCallback(() => {
+    forceRender((n) => n + 1)
+  }, [])
 
   const editor = useEditor({
     extensions: [
@@ -21,9 +32,8 @@ export default function TipTapEditor({ content, onChange }) {
       Link.configure({ openOnClick: false }),
     ],
     content: content ?? '',
-    onUpdate: ({ editor }) => {
-      onChange(editor.getJSON())
-    },
+    onUpdate: handleUpdate,
+    onSelectionUpdate: handleSelectionUpdate,
   })
 
   useEffect(() => {
@@ -33,6 +43,21 @@ export default function TipTapEditor({ content, onChange }) {
   }, [content, editor])
 
   if (!editor) return null
+
+  function withRender(fn) {
+    return (...args) => {
+      fn(...args)
+      forceRender((n) => n + 1)
+    }
+  }
+
+  const tools = [
+    { icon: Bold, action: withRender(() => editor.chain().focus().toggleBold().run()), active: editor.isActive('bold') },
+    { icon: Italic, action: withRender(() => editor.chain().focus().toggleItalic().run()), active: editor.isActive('italic') },
+    { icon: Heading2, action: withRender(() => editor.chain().focus().toggleHeading({ level: 2 }).run()), active: editor.isActive('heading', { level: 2 }) },
+    { icon: List, action: withRender(() => editor.chain().focus().toggleBulletList().run()), active: editor.isActive('bulletList') },
+    { icon: Quote, action: withRender(() => editor.chain().focus().toggleBlockquote().run()), active: editor.isActive('blockquote') },
+  ]
 
   async function handleImageUpload(file) {
     if (!file) return
@@ -45,6 +70,7 @@ export default function TipTapEditor({ content, onChange }) {
       const data = await res.json()
       editor.chain().focus().setImage({ src: data.url }).run()
       toast.success('Gambar ditambahkan')
+      forceRender((n) => n + 1)
     } catch {
       toast.error('Upload error')
     }
@@ -53,13 +79,13 @@ export default function TipTapEditor({ content, onChange }) {
   function handleLinkSubmit(e) {
     e?.preventDefault()
     if (!linkUrl) {
-      // Remove link
       editor.chain().focus().unsetLink().run()
     } else {
       editor.chain().focus().setLink({ href: linkUrl }).run()
     }
     setLinkInput(false)
     setLinkUrl('')
+    forceRender((n) => n + 1)
   }
 
   function openLinkInput() {
@@ -67,14 +93,6 @@ export default function TipTapEditor({ content, onChange }) {
     setLinkUrl(prev)
     setLinkInput(true)
   }
-
-  const tools = [
-    { icon: Bold, action: () => editor.chain().focus().toggleBold().run(), active: editor.isActive('bold') },
-    { icon: Italic, action: () => editor.chain().focus().toggleItalic().run(), active: editor.isActive('italic') },
-    { icon: Heading2, action: () => editor.chain().focus().toggleHeading({ level: 2 }).run(), active: editor.isActive('heading', { level: 2 }) },
-    { icon: List, action: () => editor.chain().focus().toggleBulletList().run(), active: editor.isActive('bulletList') },
-    { icon: Quote, action: () => editor.chain().focus().toggleBlockquote().run(), active: editor.isActive('blockquote') },
-  ]
 
   return (
     <div className="border rounded-md">
@@ -85,7 +103,7 @@ export default function TipTapEditor({ content, onChange }) {
             key={i}
             type="button"
             onClick={action}
-            className={`p-1.5 rounded ${active ? 'bg-black text-white' : 'hover:bg-gray-200'}`}
+            className={`p-1.5 rounded transition-colors ${active ? 'bg-black text-white' : 'hover:bg-gray-200'}`}
           >
             <Icon size={16} />
           </button>
@@ -112,7 +130,7 @@ export default function TipTapEditor({ content, onChange }) {
         <button
           type="button"
           onClick={openLinkInput}
-          className={`p-1.5 rounded ${editor.isActive('link') ? 'bg-black text-white' : 'hover:bg-gray-200'}`}
+          className={`p-1.5 rounded transition-colors ${editor.isActive('link') ? 'bg-black text-white' : 'hover:bg-gray-200'}`}
           title="Tambah link"
         >
           <Link2 size={16} />
@@ -122,14 +140,14 @@ export default function TipTapEditor({ content, onChange }) {
 
         <button
           type="button"
-          onClick={() => editor.chain().focus().undo().run()}
+          onClick={withRender(() => editor.chain().focus().undo().run())}
           className="p-1.5 rounded hover:bg-gray-200"
         >
           <Undo size={16} />
         </button>
         <button
           type="button"
-          onClick={() => editor.chain().focus().redo().run()}
+          onClick={withRender(() => editor.chain().focus().redo().run())}
           className="p-1.5 rounded hover:bg-gray-200"
         >
           <Redo size={16} />
