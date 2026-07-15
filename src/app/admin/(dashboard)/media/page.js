@@ -95,7 +95,8 @@ export default function MediaPage() {
   }
 
   function copyUrl(url) {
-    navigator.clipboard.writeText(url)
+    const full = window.location.origin + url
+    navigator.clipboard.writeText(full)
     toast.success('URL copied')
   }
 

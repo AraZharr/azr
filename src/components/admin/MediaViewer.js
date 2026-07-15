@@ -70,7 +70,8 @@ export default function MediaViewer({ image, onClose, onDelete, onRename }) {
   }
 
   function copyUrl() {
-    navigator.clipboard.writeText(image.url)
+    const full = window.location.origin + image.url
+    navigator.clipboard.writeText(full)
     toast.success('URL disalin')
   }
 
