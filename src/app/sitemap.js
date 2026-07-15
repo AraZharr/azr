@@ -11,6 +11,7 @@ export default async function sitemap() {
   ]
 
   try {
+    // Blog articles
     const articles = await d1.getPublishedArticles()
     for (const article of articles) {
       if (article.slug?.startsWith('http')) continue
@@ -21,8 +22,31 @@ export default async function sitemap() {
         priority: 0.7,
       })
     }
+
+    // Published pages
+    const pages = await d1.getPages()
+    for (const page of pages) {
+      if (!page.published || page.slug === 'home') continue
+      routes.push({
+        url: `${baseUrl}/${page.slug}`,
+        lastModified: new Date(page.updatedAt || page.createdAt),
+        changeFrequency: 'monthly',
+        priority: 0.6,
+      })
+    }
+
+    // Published CVs
+    const cvs = await d1.getVisibleCV()
+    for (const cv of cvs) {
+      routes.push({
+        url: `${baseUrl}/cv/${cv.slug}`,
+        lastModified: new Date(cv.updatedAt || cv.createdAt),
+        changeFrequency: 'monthly',
+        priority: 0.6,
+      })
+    }
   } catch {
-    // D1 not available, skip blog slugs
+    // D1 not available
   }
 
   return routes
