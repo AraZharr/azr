@@ -398,3 +398,36 @@ export async function checkRateLimit(key, limit, windowSeconds) {
   await db.prepare('UPDATE RateLimit SET count = count + 1 WHERE key = ?').bind(key).run()
   return { allowed: true, remaining: limit - row.count - 1 }
 }
+
+// === Session (D1-backed auth) ===
+
+export async function createSession(sid, { userId, email, name }) {
+  const db = getDB()
+  await db.prepare(
+    'INSERT INTO Session (id, user_id, email, name) VALUES (?, ?, ?, ?)'
+  ).bind(sid, userId, email, name ?? null).run()
+}
+
+export async function getSessionById(sid) {
+  const db = getDB()
+  const row = await db.prepare('SELECT * FROM Session WHERE id = ?').bind(sid).first()
+  if (!row) return null
+  // Expire sessions older than 24h
+  const created = new Date(row.created_at + 'Z').getTime()
+  if (Date.now() - created > 86400000) {
+    await db.prepare('DELETE FROM Session WHERE id = ?').bind(sid).run()
+    return null
+  }
+  return { id: row.id, userId: row.user_id, email: row.email, name: row.name }
+}
+
+export async function deleteSession(sid) {
+  const db = getDB()
+  await db.prepare('DELETE FROM Session WHERE id = ?').bind(sid).run()
+}
+
+export async function cleanupExpiredSessions() {
+  const db = getDB()
+  const cutoff = new Date(Date.now() - 86400000).toISOString().replace('T', ' ').replace('Z', '')
+  await db.prepare("DELETE FROM Session WHERE created_at < ?").bind(cutoff).run()
+}
