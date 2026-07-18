@@ -1,6 +1,15 @@
 node_modules/
 .next/
-.open-next/
-.wrangler/
 .env
 .env.local
+.env.*.local
+*.sqlite
+*.sqlite3
+*.db
+*.wal
+account
+auth
+login
+backup/
+scripts/*.json
+*.enc.json
