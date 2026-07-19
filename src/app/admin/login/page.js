@@ -30,15 +30,11 @@ export default function LoginPage() {
     e.preventDefault()
     setError('')
 
-    // If turnstile exists on window and no token yet, execute invisible
-    if (TURNSTILE_SITE_KEY && !token && !loading) {
-      if (window.turnstile) {
+    if (TURNSTILE_SITE_KEY && !token) {
+      // Execute Turnstile invisible if widget exists
+      if (window.turnstile && !loading) {
         window.turnstile.execute()
       }
-      return
-    }
-
-    if (TURNSTILE_SITE_KEY && !token) {
       setError('Silakan verifikasi CAPTCHA terlebih dahulu')
       return
     }
