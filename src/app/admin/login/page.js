@@ -29,6 +29,15 @@ export default function LoginPage() {
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
+
+    // If turnstile exists on window and no token yet, execute invisible
+    if (TURNSTILE_SITE_KEY && !token && !loading) {
+      if (window.turnstile) {
+        window.turnstile.execute()
+      }
+      return
+    }
+
     if (TURNSTILE_SITE_KEY && !token) {
       setError('Silakan verifikasi CAPTCHA terlebih dahulu')
       return
