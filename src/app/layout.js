@@ -95,7 +95,7 @@ export default async function RootLayout({ children }) {
       </head>
       <body className={`text-black bg-white antialiased ${inter.variable} min-h-screen flex flex-col`} style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif' }}>
         <Navbar />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 flex flex-col">{children}</main>
         <Footer />
         <ChatWidget />
         <Toaster />
