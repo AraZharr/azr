@@ -114,3 +114,39 @@ body {
 .delay-200 { animation-delay: 0.2s; }
 .delay-400 { animation-delay: 0.4s; }
 .delay-600 { animation-delay: 0.6s; }
+
+/* Quill: prevent horizontal page scroll on mobile */
+.quill-wrap,
+.quill-wrap .quill,
+.quill-wrap .ql-container,
+.quill-wrap .ql-editor {
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.quill-wrap .ql-toolbar.ql-snow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  max-width: 100%;
+  box-sizing: border-box;
+  white-space: normal !important;
+}
+.quill-wrap .ql-toolbar.ql-snow .ql-formats {
+  margin-right: 8px !important;
+}
+.quill-wrap .ql-editor img {
+  max-width: 100%;
+  height: auto;
+}
+.quill-wrap .ql-editor {
+  min-height: 240px;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* html/body overflow hard lock */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}

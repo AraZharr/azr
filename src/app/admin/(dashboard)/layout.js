@@ -12,10 +12,10 @@ export default async function AdminLayout({ children }) {
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen w-full max-w-[100vw] overflow-x-hidden">
       <Sidebar />
-      <main className="flex-1 p-4 lg:p-8 pt-14 lg:pt-8 w-full max-w-full overflow-x-hidden">
-        <div className="max-w-6xl mx-auto w-full">
+      <main className="flex-1 min-w-0 w-full max-w-full overflow-x-hidden p-4 sm:p-6 lg:p-8 pt-16 lg:pt-8">
+        <div className="w-full max-w-5xl mx-auto min-w-0">
           {children}
         </div>
       </main>

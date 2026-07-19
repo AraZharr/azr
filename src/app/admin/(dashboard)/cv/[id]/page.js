@@ -110,7 +110,7 @@ export default function EditCV({ params }) {
   if (!form) return null
 
   return (
-    <div className="max-w-3xl w-full mx-auto px-4">
+    <div className="w-full min-w-0 max-w-3xl">
       <h1 className="text-2xl font-bold mb-6">Edit CV — {form.title}</h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">

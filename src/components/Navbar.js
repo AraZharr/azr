@@ -31,6 +31,9 @@ export default function Navbar() {
       .catch(() => {})
   }, [])
 
+  // Admin has its own chrome
+  if (pathname?.startsWith('/admin')) return null
+
   return (
     <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">

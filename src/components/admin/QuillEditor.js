@@ -9,6 +9,7 @@ import 'react-quill/dist/quill.snow.css'
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 
 export default function QuillEditor({ content, onChange }) {
+  const quillRef = useRef(null)
   const uploadRef = useRef(null)
 
   const modules = useMemo(() => ({
@@ -29,32 +30,50 @@ export default function QuillEditor({ content, onChange }) {
 
   async function handleImageUpload(file) {
     if (!file) return
+    if (!file.type?.startsWith('image/')) {
+      toast.error('File harus gambar')
+      return
+    }
     file = await compressImage(file)
     const fd = new FormData()
     fd.append('file', file)
     try {
       const res = await fetch('/api/admin/media', { method: 'POST', body: fd })
-      if (!res.ok) { toast.error('Upload failed'); return }
+      if (!res.ok) {
+        toast.error('Upload failed')
+        return
+      }
       const { url } = await res.json()
-      const quill = uploadRef.current?.quill
-      if (quill) {
-        const range = quill.getSelection(true)
-        quill.insertEmbed(range.index, 'image', url)
+      const editor = quillRef.current?.getEditor?.()
+      if (editor) {
+        const range = editor.getSelection(true)
+        editor.insertEmbed(range?.index ?? 0, 'image', url)
       }
       toast.success('Gambar ditambahkan')
     } catch {
       toast.error('Upload error')
+    } finally {
+      if (uploadRef.current) uploadRef.current.value = ''
     }
   }
 
+  // Normalize TipTap JSON leftovers → empty string for Quill
+  const value = typeof content === 'string'
+    ? content
+    : content && typeof content === 'object'
+      ? ''
+      : (content ?? '')
+
   return (
-    <div className="border rounded-md overflow-hidden">
+    <div className="w-full min-w-0 max-w-full overflow-hidden rounded-md border bg-white quill-wrap">
       <ReactQuill
+        ref={quillRef}
         theme="snow"
-        value={content ?? ''}
+        value={value}
         onChange={onChange}
         modules={modules}
         placeholder="Tulis artikel..."
+        className="w-full max-w-full"
       />
       <input
         ref={uploadRef}

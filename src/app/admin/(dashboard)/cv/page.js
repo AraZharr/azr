@@ -38,7 +38,7 @@ export default function AdminCVPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <h1 className="text-2xl font-bold">Curriculum Vitae</h1>
         <Button onClick={() => router.push('/admin/cv/create')}>
           <Plus size={16} className="mr-1" /> Add CV
