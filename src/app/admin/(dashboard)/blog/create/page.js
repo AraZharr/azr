@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Image as ImageIcon, Upload } from 'lucide-react'
-import TipTapEditor from '@/components/admin/TipTapEditor'
+import QuillEditor from '@/components/admin/QuillEditor'
 import ImagePicker from '@/components/admin/ImagePicker'
 import { toast } from 'sonner'
 import { compressImage } from '@/lib/compress-image'
@@ -83,7 +83,7 @@ export default function CreateArticle() {
 
         <div className="space-y-2">
           <Label>Content</Label>
-          <TipTapEditor content={content} onChange={setContent} />
+          <QuillEditor content={content} onChange={setContent} />
         </div>
 
         <label className="flex items-center gap-2 text-sm">

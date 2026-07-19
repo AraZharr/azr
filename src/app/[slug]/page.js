@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import * as d1 from '@/lib/d1'
-import TipTapRenderer from '@/components/TipTapRenderer'
+import HtmlRenderer from '@/components/HtmlRenderer'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 
@@ -31,7 +31,7 @@ export default async function PublicPage({ params }) {
       <h1 className="text-3xl font-bold mb-8">{page.title}</h1>
 
       <div className="prose prose-gray max-w-none">
-        <TipTapRenderer content={page.content} />
+        <HtmlRenderer content={page.content} />
       </div>
     </article>
   )

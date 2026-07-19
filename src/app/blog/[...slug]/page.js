@@ -1,6 +1,6 @@
 import * as d1 from '@/lib/d1'
 import { notFound, redirect } from 'next/navigation'
-import TipTapRenderer from '@/components/TipTapRenderer'
+import HtmlRenderer from '@/components/HtmlRenderer'
 
 export const dynamic = 'force-dynamic'
 
@@ -51,7 +51,7 @@ export default async function ArticlePage({ params }) {
         })}
       </time>
       <div className="prose prose-gray max-w-none">
-        <TipTapRenderer content={article.content} />
+        <HtmlRenderer content={article.content} />
       </div>
     </article>
   )
