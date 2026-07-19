@@ -4,9 +4,9 @@ import { useMemo, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { compressImage } from '@/lib/compress-image'
 import { toast } from 'sonner'
-import 'react-quill/dist/quill.snow.css'
+import 'react-quill-new/dist/quill.snow.css'
 
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
+const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false })
 
 export default function QuillEditor({ content, onChange }) {
   const quillRef = useRef(null)
