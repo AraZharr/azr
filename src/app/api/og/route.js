@@ -1,45 +1,124 @@
-// OG Image generator — returns SVG as image
-// Fully self-contained, no deps needed
+import { ImageResponse } from 'next/og'
+
+export const runtime = 'edge'
 
 export async function GET() {
   const siteUrl = process.env.NEXT_PUBLIC_URL || 'https://azr.is-a.dev'
   const title = process.env.NEXT_PUBLIC_OG_TITLE || 'AraZhar'
   const tagline = process.env.NEXT_PUBLIC_OG_TAGLINE || 'Developer & Creator'
 
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0a0a0a"/>
-      <stop offset="100%" stop-color="#1a1a2e"/>
-    </linearGradient>
-    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#6366f1"/>
-      <stop offset="100%" stop-color="#8b5cf6"/>
-    </linearGradient>
-  </defs>
-  <rect width="1200" height="630" fill="url(#bg)"/>
-  <rect x="60" y="60" width="1080" height="510" rx="16" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
-  <!-- Decorative circles -->
-  <circle cx="200" cy="150" r="180" fill="rgba(99,102,241,0.08)"/>
-  <circle cx="1000" cy="480" r="120" fill="rgba(139,92,246,0.06)"/>
-  <!-- Main title -->
-  <text x="600" y="290" text-anchor="middle" fill="white" font-family="system-ui,sans-serif" font-size="72" font-weight="800" letter-spacing="-2">${escapeXml(title)}</text>
-  <!-- Accent line -->
-  <rect x="540" y="320" width="120" height="4" rx="2" fill="url(#accent)"/>
-  <!-- Tagline -->
-  <text x="600" y="370" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-family="system-ui,sans-serif" font-size="28" font-weight="400" letter-spacing="1">${escapeXml(tagline)}</text>
-  <!-- URL -->
-  <text x="600" y="440" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-family="monospace" font-size="18" letter-spacing="0.5">${escapeXml(siteUrl)}</text>
-</svg>`
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%)',
+          fontFamily: 'system-ui, sans-serif',
+          position: 'relative',
+        }}
+      >
+        {/* soft glow */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 80,
+            left: 120,
+            width: 280,
+            height: 280,
+            borderRadius: 999,
+            background: 'rgba(99,102,241,0.12)',
+            display: 'flex',
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            bottom: 60,
+            right: 100,
+            width: 200,
+            height: 200,
+            borderRadius: 999,
+            background: 'rgba(139,92,246,0.1)',
+            display: 'flex',
+          }}
+        />
 
-  return new Response(svg, {
-    headers: {
-      'Content-Type': 'image/svg+xml',
-      'Cache-Control': 'public, max-age=31536000, immutable',
-    },
-  })
-}
+        {/* frame */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 48,
+            left: 48,
+            right: 48,
+            bottom: 48,
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: 16,
+            display: 'flex',
+          }}
+        />
 
-function escapeXml(s) {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 20,
+            zIndex: 1,
+          }}
+        >
+          <div
+            style={{
+              fontSize: 72,
+              fontWeight: 800,
+              color: 'white',
+              letterSpacing: -2,
+              lineHeight: 1.1,
+            }}
+          >
+            {title}
+          </div>
+          <div
+            style={{
+              width: 120,
+              height: 4,
+              borderRadius: 2,
+              background: 'linear-gradient(90deg, #6366f1, #8b5cf6)',
+              display: 'flex',
+            }}
+          />
+          <div
+            style={{
+              fontSize: 28,
+              color: 'rgba(255,255,255,0.65)',
+              letterSpacing: 1,
+            }}
+          >
+            {tagline}
+          </div>
+          <div
+            style={{
+              marginTop: 24,
+              fontSize: 18,
+              color: 'rgba(255,255,255,0.35)',
+              fontFamily: 'monospace',
+            }}
+          >
+            {siteUrl.replace(/^https?:\/\//, '')}
+          </div>
+        </div>
+      </div>
+    ),
+    {
+      width: 1200,
+      height: 630,
+      headers: {
+        'Cache-Control': 'public, max-age=86400, s-maxage=86400',
+      },
+    }
+  )
 }
