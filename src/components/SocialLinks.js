@@ -8,11 +8,10 @@ import {
   Music2,
   Send,
   Gamepad2,
-  Github,
+  GitBranch,
   MessageSquare,
-  Linkedin,
-  Youtube,
   Link2,
+  Video,
 } from 'lucide-react'
 
 const ICON_MAP = {
@@ -22,10 +21,10 @@ const ICON_MAP = {
   tiktok: Music2,
   telegram: Send,
   discord: Gamepad2,
-  github: Github,
+  github: GitBranch,
   twitter: MessageSquare,
-  linkedin: Linkedin,
-  youtube: Youtube,
+  linkedin: Link2,
+  youtube: Video,
   custom: Link2,
 }
 

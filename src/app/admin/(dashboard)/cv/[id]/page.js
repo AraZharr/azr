@@ -150,7 +150,7 @@ export default function EditCV({ params }) {
               )}
             </div>
             {showImgPicker && (
-              <ImagePicker onSelect={(url) => { setData('photo', url); setShowImgPicker(false) }} onClose={() => setShowImgPicker(false)} />
+              <ImagePicker open={showImgPicker} onSelect={(url) => { setData('photo', url); setShowImgPicker(false) }} onClose={() => setShowImgPicker(false)} />
             )}
           </div>
 
