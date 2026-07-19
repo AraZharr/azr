@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import TipTapRenderer from '@/components/TipTapRenderer'
+import HtmlRenderer from '@/components/HtmlRenderer'
 
 export default function About() {
   const [page, setPage] = useState(null)
@@ -20,7 +20,7 @@ export default function About() {
       <h2 className="text-3xl font-bold mb-6">About</h2>
       {page && page.content ? (
         <div className="text-gray-700 leading-relaxed">
-          <TipTapRenderer content={page.content} />
+          <HtmlRenderer content={page.content} />
         </div>
       ) : (
         <div className="space-y-4 text-gray-700 leading-relaxed">

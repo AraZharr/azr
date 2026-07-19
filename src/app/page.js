@@ -13,11 +13,11 @@ const Contact = dynamic(() => import('@/components/Contact'), {
 
 export default function Home() {
   return (
-    <>
+    <div className="max-w-6xl mx-auto">
       <Hero />
       <Projects />
       <CVSection />
       <Contact />
-    </>
+    </div>
   )
 }
