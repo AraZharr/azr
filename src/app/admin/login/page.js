@@ -1,10 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-'use client'
-
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Eye, EyeOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -20,34 +16,32 @@ export default function LoginPage() {
   const [turnstileToken, setTurnstileToken] = useState('')
   const [loading, setLoading] = useState(false)
   const containerRef = useRef(null)
-  const renderReadyRef = useRef(false)
 
-  const renderWidget = () => {
-    if (renderReadyRef.current || !containerRef.current) return
-    renderReadyRef.current = true
+  useEffect(() => {
+    if (!TURNSTILE_SITE_KEY || !containerRef.current) return
 
     const script = document.createElement('script')
     script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
     script.async = true
+    script.defer = true
     script.onload = () => {
-      if (window.turnstile) {
-        window.turnstile.render(containerRef.current, {
-          sitekey: TURNSTILE_SITE_KEY,
-          callback: (token) => {
-            setTurnstileToken(token)
-            setError('')
-          },
-          'expired-callback': () => setTurnstileToken(''),
-          'error-callback': () => setTurnstileToken(''),
-        })
-      }
+      window.turnstile.render(containerRef.current, {
+        sitekey: TURNSTILE_SITE_KEY,
+        callback: (token) => {
+          setTurnstileToken(token)
+          setError('')
+        },
+        'expired-callback': () => setTurnstileToken(''),
+        'error-callback': () => setTurnstileToken(''),
+      })
     }
     document.head.appendChild(script)
-  }
 
-  useEffect(() => {
-    if (!TURNSTILE_SITE_KEY || !containerRef.current) return
-    renderWidget()
+    return () => {
+      if (window.turnstile) {
+        try { window.turnstile.remove() } catch {}
+      }
+    }
   }, [])
 
   async function handleSubmit(e) {
@@ -64,19 +58,14 @@ export default function LoginPage() {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, turnstileToken }),
+        body: JSON.stringify({ email, password, token: turnstileToken }),
       })
       const data = await res.json()
 
       if (!res.ok) {
         setError(data.error || 'Email atau password salah')
         setTurnstileToken('')
-        if (containerRef.current && window.turnstile) {
-          window.turnstile.reset()
-          renderReadyRef.current = false
-          containerRef.current.innerHTML = ''
-          renderWidget()
-        }
+        if (window.turnstile) window.turnstile.reset()
       } else {
         router.push('/admin/dashboard')
       }
