@@ -24,7 +24,7 @@ export default function Footer() {
   }, [])
 
   return (
-    <footer className="border-t py-8 sm:py-10">
+    <footer className="border-t mt-auto py-8 sm:py-10">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center gap-3">
         {pages.length > 0 && (
           <nav className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs text-gray-400">
