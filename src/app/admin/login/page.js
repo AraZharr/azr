@@ -68,56 +68,66 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm md:max-w-md lg:max-w-lg bg-white p-6 sm:p-8 md:p-10 rounded-xl border shadow-sm space-y-4 md:space-y-5"
+        className="w-full max-w-sm sm:max-w-md bg-white p-6 sm:p-8 rounded-xl border shadow-sm space-y-6"
       >
-        <h1 className="text-xl md:text-2xl font-bold text-center">Admin Login</h1>
-
-        {error && (
-          <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded">{error}</p>
-        )}
-
-        <div className="space-y-2">
-          <label htmlFor="email" className="text-sm font-medium">Email</label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="h-9 md:h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-1.5 text-base outline-none focus:border-black transition-colors md:text-sm"
-          />
+        <div className="space-y-1 text-center">
+          <h1 className="text-2xl font-bold tracking-tight">Admin Login</h1>
+          <p className="text-sm text-gray-500">Masukkan kredensial untuk akses panel</p>
         </div>
 
-        <div className="space-y-2">
-          <label htmlFor="password" className="text-sm font-medium">Password</label>
-          <div className="relative">
+        {error && (
+          <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg border border-red-100">{error}</p>
+        )}
+
+        <div className="space-y-4">
+          <div className="space-y-1.5">
+            <label htmlFor="email" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              Email
+            </label>
             <input
-              id="password"
-              type={showPassword ? 'text' : 'password'}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
-              className="h-9 md:h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-1.5 text-base outline-none focus:border-black transition-colors md:text-sm pr-9"
+              placeholder="admin@example.com"
+              className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-              tabIndex={-1}
-            >
-              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-            </button>
+          </div>
+
+          <div className="space-y-1.5">
+            <label htmlFor="password" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              Password
+            </label>
+            <div className="relative">
+              <input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="••••••••"
+                className="flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
           </div>
         </div>
 
         {TURNSTILE_SITE_KEY && (
-          <div className="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-callback="onTurnstileCallback"></div>
+          <div ref={containerRef} className="cf-turnstile w-full flex justify-center py-2"></div>
         )}
 
-        <Button type="submit" className="w-full h-9 md:h-10" disabled={loading}>
+        <Button type="submit" className="w-full h-10 font-medium" disabled={loading}>
           {loading ? 'Memproses...' : 'Login'}
         </Button>
       </form>
     </div>
   )
-}
