@@ -61,7 +61,7 @@ export default function CreateArticle() {
   }
 
   return (
-    <div className="max-w-3xl">
+    <div className="max-w-3xl w-full mx-auto px-4">
       <h1 className="text-2xl font-bold mb-6">New Article</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">

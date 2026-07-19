@@ -68,7 +68,12 @@ html {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Prevent horizontal scroll on any device */
+/* Force prevent overflow in admin */
+.admin-container {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
 body {
   overflow-x: hidden;
   width: 100%;
