@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { Share2, MapPin, Mail, Phone, Globe } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -12,11 +11,9 @@ function ProgressBar({ name, level }) {
         <span className="text-gray-400">{level}%</span>
       </div>
       <div className="h-1.5 sm:h-2 bg-gray-100 rounded-full overflow-hidden">
-        <motion.div
+        <div
           className="h-full bg-black rounded-full"
-          initial={{ width: 0 }}
-          animate={{ width: `${level}%` }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
+          style={{ width: `${level}%`, transition: 'width 0.6s ease-out' }}
         />
       </div>
     </div>

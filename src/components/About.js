@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
 import TipTapRenderer from '@/components/TipTapRenderer'
 
 export default function About() {
@@ -17,13 +16,7 @@ export default function About() {
   }, [])
 
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.6 }}
-      className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20"
-    >
+    <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 animate-fade-in-up">
       <h2 className="text-3xl font-bold mb-6">About</h2>
       {page && page.content ? (
         <div className="text-gray-700 leading-relaxed">
@@ -41,6 +34,6 @@ export default function About() {
           </p>
         </div>
       )}
-    </motion.section>
+    </section>
   )
 }

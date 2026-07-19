@@ -1,8 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import TipTapRenderer from '@/components/TipTapRenderer'
 
 export default function Skills() {
   const [skills, setSkills] = useState([])
@@ -15,13 +13,7 @@ export default function Skills() {
   }, [])
 
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.6 }}
-      className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20"
-    >
+    <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 animate-fade-in-up">
       <h2 className="text-3xl font-bold mb-8">Skills</h2>
       {skills.length === 0 ? (
         <p className="text-gray-500">Belum ada skill yang ditambahkan.</p>
@@ -34,18 +26,20 @@ export default function Skills() {
                 <span className="text-gray-500">{level}%</span>
               </div>
               <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                <motion.div
-                  className="h-full bg-black rounded-full"
-                  initial={{ width: 0 }}
-                  whileInView={{ width: `${level}%` }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: i * 0.1 }}
+                <div
+                  className="h-full bg-black rounded-full w-0"
+                  style={{
+                    transitionProperty: 'width',
+                    transitionDuration: '0.8s',
+                    transitionDelay: `${i * 0.1}s`,
+                    width: `${level}%`,
+                  }}
                 />
               </div>
             </div>
           ))}
         </div>
       )}
-    </motion.section>
+    </section>
   )
 }

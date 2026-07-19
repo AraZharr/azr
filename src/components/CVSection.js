@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import CVCard from '@/components/CVCard'
 
 export default function CVSection({ initialSlug }) {
@@ -74,17 +73,9 @@ export default function CVSection({ initialSlug }) {
         onTouchEnd={handleTouchEnd}
         className="relative overflow-hidden"
       >
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={cv.id}
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -40 }}
-            transition={{ duration: 0.25 }}
-          >
-            <CVCard cv={cv} />
-          </motion.div>
-        </AnimatePresence>
+        <div key={cv.id} className="transition-opacity duration-200">
+          <CVCard cv={cv} />
+        </div>
       </div>
 
       {/* Dots indicator */}
