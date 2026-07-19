@@ -276,7 +276,7 @@ const DEFAULTS = {
   og_title: '',
   meta_description: 'Portfolio pribadi AraZhar — Developer, kreator digital. Membangun solusi web, bot, dan automation yang berdampak.',
   keywords: 'AraZhar,developer,portfolio,web developer,fullstack,Next.js,Telegram bot,automation,Indonesia',
-  canonical_url: 'https://clover.azhr.workers.dev',
+  canonical_url: 'https://azr.is-a.dev',
   copyright_text: '© {year} AraZhar. All rights reserved.',
 }
 

@@ -2,7 +2,7 @@
 // Fully self-contained, no deps needed
 
 export async function GET() {
-  const siteUrl = process.env.NEXT_PUBLIC_URL || 'https://clover.azhr.workers.dev'
+  const siteUrl = process.env.NEXT_PUBLIC_URL || 'https://azr.is-a.dev'
   const title = process.env.NEXT_PUBLIC_OG_TITLE || 'AraZhar'
   const tagline = process.env.NEXT_PUBLIC_OG_TAGLINE || 'Developer & Creator'
 

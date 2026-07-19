@@ -121,9 +121,10 @@ export default function LoginPage() {
 
         {TURNSTILE_SITE_KEY && (
           <div
-            className="cf-turnstile flex justify-center overflow-hidden"
+            className="cf-turnstile"
             data-sitekey={TURNSTILE_SITE_KEY}
             data-callback="onTurnstileCallback"
+            data-theme="light"
           />
         )}
 

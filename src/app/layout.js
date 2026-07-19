@@ -8,7 +8,7 @@ import { Toaster } from '@/components/ui/sonner'
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
 export async function generateMetadata() {
-  const siteUrl = process.env.NEXT_PUBLIC_URL || 'https://clover.azhr.workers.dev'
+  const siteUrl = process.env.NEXT_PUBLIC_URL || 'https://azr.is-a.dev'
   let settings = {}
   try {
     const d1 = await import('@/lib/d1')
@@ -66,7 +66,7 @@ export async function generateMetadata() {
 }
 
 export default async function RootLayout({ children }) {
-  const siteUrl = process.env.NEXT_PUBLIC_URL || 'https://clover.azhr.workers.dev'
+  const siteUrl = process.env.NEXT_PUBLIC_URL || 'https://azr.is-a.dev'
   let settings = {}
   try {
     const d1 = await import('@/lib/d1')

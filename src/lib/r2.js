@@ -1,6 +1,6 @@
 import { AwsClient } from 'aws4fetch'
 
-// R2 lewat S3-compatible API — bucket clover-images tetap dipakai,
+// R2 lewat S3-compatible API — bucket azr tetap dipakai,
 // tidak perlu binding Workers.
 let aws
 

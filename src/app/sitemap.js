@@ -1,7 +1,7 @@
 import * as d1 from '@/lib/d1'
 
 export default async function sitemap() {
-  const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://clover.azhr.workers.dev'
+  const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://azr.is-a.dev'
 
   const routes = [
     { url: baseUrl, lastModified: new Date(), changeFrequency: 'weekly', priority: 1 },

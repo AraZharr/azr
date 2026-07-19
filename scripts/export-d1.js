@@ -2,7 +2,7 @@
 const CF_TOKEN = process.argv[2];
 const ACCOUNT_ID = 'bf9e4ec1d32aefcd6e82e090487e4490';
 const DB_ID = 'c19b5005-10aa-4084-a168-2a165f935f4e';
-const BUCKET = 'clover-images';
+const BUCKET = 'azr';
 const BASE = `https://api.cloudflare.com/client/v4/accounts/${ACCOUNT_ID}`;
 const HEADERS = { Authorization: `Bearer ${CF_TOKEN}`, 'Content-Type': 'application/json' };
 
@@ -22,7 +22,7 @@ async function main() {
     .map(t => t.name);
   console.log('Tables:', tables);
 
-  let dump = `-- D1 export: clover-db → Turso\n-- ${new Date().toISOString()}\n\n`;
+  let dump = `-- D1 export: azr-db → Turso\n-- ${new Date().toISOString()}\n\n`;
   for (const t of tables) {
     const rows = await query(`SELECT * FROM "${t}";`);
     if (rows.length === 0) continue;

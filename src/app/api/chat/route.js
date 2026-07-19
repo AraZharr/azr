@@ -8,8 +8,8 @@ const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash'
 const GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile'
 
 const SITE_KNOWLEDGE = `
-=== CLOVER PORTFOLIO ===
-URL: clover.azhr.workers.dev
+=== AZR PORTFOLIO ===
+URL: azr.is-a.dev
 
 == TENTANG ==
 AraZhar adalah developer & creator digital Indonesia.
@@ -19,7 +19,7 @@ Terbiasa dengan JavaScript, Next.js, dan ekosistem open source.
 
 == SKILLS ==
 Skills dan levelnya bisa dilihat langsung di halaman Skills website.
-Tech stack utama: JavaScript, Next.js, Tailwind CSS, Node.js, Cloudflare Workers + D1.
+Tech stack utama: JavaScript, Next.js, Tailwind CSS, Node.js, Vercel + Turso.
 
 == PROJECTS ==
 Project bisa dilihat langsung di halaman Projects website.

@@ -77,7 +77,7 @@ function Timeline({ items, type }) {
 
 export default function CVCard({ cv }) {
   const d = cv?.data || {}
-  const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://clover.azhr.workers.dev'
+  const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://azr.is-a.dev'
   const shareUrl = `${baseUrl}/cv/${cv.slug}`
 
   async function handleShare() {

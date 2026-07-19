@@ -2,7 +2,7 @@
 
 > Portfolio pribadi AraZhar — Developer & kreator digital Indonesia. Membangun solusi web, bot, dan automation yang berdampak.
 
-[![Website](https://img.shields.io/badge/🌐-clover.azhr.workers.dev-black)](https://clover.azhr.workers.dev)
+[![Website](https://img.shields.io/badge/🌐-azr.is-a.dev-black)](https://azr.is-a.dev)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 ---
@@ -158,7 +158,7 @@ Desain responsif untuk semua device:
 ### Project Structure
 
 ```
-clover/
+azr/
 ├── src/
 │   ├── app/                    # Next.js App Router pages
 │   │   ├── page.js            # Homepage (Hero, Projects, Contact)
@@ -235,8 +235,8 @@ Tersedia di website dan bisa dihubungi melalui:
 
 ```bash
 # Clone repository
-git clone https://github.com/AraZharr/clover.git
-cd clover
+git clone https://github.com/AraZharr/azr.git
+cd azr
 
 # Install dependencies
 npm install
@@ -255,7 +255,7 @@ Buka [http://localhost:3000](http://localhost:3000) di browser.
 
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
-| `NEXT_PUBLIC_URL` | Yes | `https://clover.azhr.workers.dev` | Base URL website |
+| `NEXT_PUBLIC_URL` | Yes | `https://azr.is-a.dev` | Base URL website |
 | `NEXT_PUBLIC_WA_NUMBER` | No | — | WhatsApp number (format: `628xxx`) |
 | `GEMINI_API_KEY` | Yes | — | Google Gemini API key |
 | `GROQ_API_KEY` | Yes | — | Groq API key |
@@ -269,11 +269,11 @@ Buka [http://localhost:3000](http://localhost:3000) di browser.
 npx wrangler login
 
 # Buat D1 database
-npx wrangler d1 create clover-db
+npx wrangler d1 create azr-db
 
 # Jalankan migrasi
-npx wrangler d1 execute clover-db --file=./migrations/0001_init.sql
-npx wrangler d1 execute clover-db --file=./migrations/0002_social_link.sql
+npx wrangler d1 execute azr-db --file=./migrations/0001_init.sql
+npx wrangler d1 execute azr-db --file=./migrations/0002_social_link.sql
 
 # Build
 npm run build

@@ -35,8 +35,8 @@ Kalau belum, download dari https://nodejs.org lalu install.
 ## STEP 2: Clone Repository
 
 ```bash
-git clone https://github.com/AraZharr/clover.git
-cd clover
+git clone https://github.com/AraZharr/azr.git
+cd azr
 ```
 
 ---
@@ -84,16 +84,16 @@ Kalau browser tidak terbuka otomatis, copy URL yang muncul di terminal lalu buka
 ## STEP 6: Buat D1 Database
 
 ```bash
-wrangler d1 create clover-db
+wrangler d1 create azr-db
 ```
 
 Setelah dijalankan, akan muncul output seperti ini:
 
 ```
-✅ Successfully created DB 'clover-db'
+✅ Successfully created DB 'azr-db'
 [[d1_databases]]
 binding = "DB"
-database_name = "clover-db"
+database_name = "azr-db"
 database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 ```
 
@@ -107,7 +107,7 @@ Buka file `wrangler.jsonc`, ganti bagian `database_id` yang kosong:
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "clover-db",
+      "database_name": "azr-db",
       "database_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"  // <-- paste di sini
     }
   ]
@@ -123,19 +123,19 @@ Buka file `wrangler.jsonc`, ganti bagian `database_id` yang kosong:
 Jalankan perintah ini satu per satu:
 
 ```bash
-wrangler d1 execute clover-db --remote --file=./migrations/0001_init.sql
+wrangler d1 execute azr-db --remote --file=./migrations/0001_init.sql
 ```
 
 ```bash
-wrangler d1 execute clover-db --remote --file=./migrations/0002_social_link.sql
+wrangler d1 execute azr-db --remote --file=./migrations/0002_social_link.sql
 ```
 
 ```bash
-wrangler d1 execute clover-db --remote --file=./migrations/0003_skill_project.sql
+wrangler d1 execute azr-db --remote --file=./migrations/0003_skill_project.sql
 ```
 
 ```bash
-wrangler d1 execute clover-db --remote --file=./migrations/0004_ratelimit.sql
+wrangler d1 execute azr-db --remote --file=./migrations/0004_ratelimit.sql
 ```
 
 Ini akan membuat tabel: User, Page, BlogArticle, SocialLink, Skill, Project, RateLimit.
@@ -147,7 +147,7 @@ Ini akan membuat tabel: User, Page, BlogArticle, SocialLink, Skill, Project, Rat
 Jalankan perintah ini (ganti email dan password sesuai keinginan kamu):
 
 ```bash
-wrangler d1 execute clover-db --remote --command="INSERT INTO User (id, email, password, name) VALUES (lower(hex(randomblob(16))), 'admin@example.com', 'password123', 'AraZhar')"
+wrangler d1 execute azr-db --remote --command="INSERT INTO User (id, email, password, name) VALUES (lower(hex(randomblob(16))), 'admin@example.com', 'password123', 'AraZhar')"
 ```
 
 - Email: `admin@example.com` (atau ganti)
@@ -164,7 +164,7 @@ Buka file `.env`, isi semua variabel:
 
 ```env
 # === CLOUDFLARE ===
-CLOUDFLARE_DATABASE_NAME="clover-db"
+CLOUDFLARE_DATABASE_NAME="azr-db"
 
 # === JWT ===
 JWT_SECRET="ganti-dengan-random-string"
@@ -179,7 +179,7 @@ GROQ_MODEL="llama-3.3-70b-versatile"
 NEXT_PUBLIC_WA_NUMBER="628xxxxxxxxxx"
 
 # === DOMAIN ===
-NEXT_PUBLIC_URL="https://clover.azhr.workers.dev"
+NEXT_PUBLIC_URL="https://azr.is-a.dev"
 ```
 
 ### Penjelasan tiap variabel:
@@ -190,7 +190,7 @@ NEXT_PUBLIC_URL="https://clover.azhr.workers.dev"
 | `GEMINI_API_KEY` | API key Google Gemini | https://aistudio.google.com/apikey (klik "Create API Key") |
 | `GROQ_API_KEY` | API key Groq | https://console.groq.com/keys (daftar → buat key) |
 | `NEXT_PUBLIC_WA_NUMBER` | Nomor WhatsApp tanpa + | Contoh: `6281234567890` (62 = kode Indonesia) |
-| `NEXT_PUBLIC_URL` | Domain website kamu | Isi dulu dengan `https://clover.azhr.workers.dev`, ganti nanti kalau domain berubah |
+| `NEXT_PUBLIC_URL` | Domain website kamu | Isi dulu dengan `https://azr.is-a.dev`, ganti nanti kalau domain berubah |
 
 ### Generate JWT_SECRET:
 
@@ -235,7 +235,7 @@ Perintah ini akan:
 Kalau berhasil, akan muncul output seperti:
 
 ```
-Worker deployed: https://clover.xxxxx.workers.dev
+Worker deployed: https://azr.is-a.dev
 ```
 
 **Copy URL itu** — itu adalah website kamu yang sudah live!
@@ -251,7 +251,7 @@ Beberapa variabel environment harus di-set langsung di Cloudflare (karena `.env`
 1. Buka https://dash.cloudflare.com
 2. Pilih akun kamu
 3. Klik **Workers & Pages** (menu kiri)
-4. Klik nama worker kamu (`clover`)
+4. Klik nama project kamu (`azr`)
 5. Klik tab **Settings**
 6. Klik **Environment variables**
 7. Tambah variabel satu per satu:
@@ -262,7 +262,7 @@ Beberapa variabel environment harus di-set langsung di Cloudflare (karena `.env`
 | `GEMINI_API_KEY` | (nilai dari .env) | Encrypted |
 | `GROQ_API_KEY` | (nilai dari .env) | Encrypted |
 | `NEXT_PUBLIC_WA_NUMBER` | (nilai dari .env) | Plaintext |
-| `NEXT_PUBLIC_URL` | https://clover.azhr.workers.dev | Plaintext |
+| `NEXT_PUBLIC_URL` | https://azr.is-a.dev | Plaintext |
 | `GEMINI_MODEL` | gemini-2.0-flash | Plaintext |
 | `GROQ_MODEL` | llama-3.3-70b-versatile | Plaintext |
 
@@ -358,7 +358,7 @@ Kamu akan melihat:
 Kalau kamu punya domain sendiri (contoh: `example.com`):
 
 1. Buka https://dash.cloudflare.com
-2. Klik **Workers & Pages** → pilih worker `clover`
+2. Klik **Workers & Pages** → pilih project `azr`
 3. Klik tab **Triggers**
 4. Klik **Add Custom Domain**
 5. Isi domain (contoh: `example.com`)
@@ -367,7 +367,7 @@ Kalau kamu punya domain sendiri (contoh: `example.com`):
 **Catatan:** Domain harus menggunakan Cloudflare sebagai DNS provider.
 
 Kalau belum punya domain, website tetap bisa diakses via URL Cloudflare:
-`https://clover.xxxxx.workers.dev`
+`https://azr.is-a.dev`
 
 ---
 
@@ -438,8 +438,8 @@ Semua fitur di bawah **gratis** di Cloudflare Free plan:
 
 ```bash
 # 1. Clone
-git clone https://github.com/AraZharr/clover.git
-cd clover
+git clone https://github.com/AraZharr/azr.git
+cd azr
 
 # 2. Install
 npm install
@@ -449,17 +449,17 @@ npm install -g wrangler
 wrangler login
 
 # 4. Buat database
-wrangler d1 create clover-db
+wrangler d1 create azr-db
 # → isi database_id di wrangler.jsonc
 
 # 5. Migrasi tabel
-wrangler d1 execute clover-db --remote --file=./migrations/0001_init.sql
-wrangler d1 execute clover-db --remote --file=./migrations/0002_social_link.sql
-wrangler d1 execute clover-db --remote --file=./migrations/0003_skill_project.sql
-wrangler d1 execute clover-db --remote --file=./migrations/0004_ratelimit.sql
+wrangler d1 execute azr-db --remote --file=./migrations/0001_init.sql
+wrangler d1 execute azr-db --remote --file=./migrations/0002_social_link.sql
+wrangler d1 execute azr-db --remote --file=./migrations/0003_skill_project.sql
+wrangler d1 execute azr-db --remote --file=./migrations/0004_ratelimit.sql
 
 # 6. Buat admin user
-wrangler d1 execute clover-db --remote --command="INSERT INTO User (id, email, password, name) VALUES (lower(hex(randomblob(16))), 'admin@example.com', 'password123', 'AraZhar')"
+wrangler d1 execute azr-db --remote --command="INSERT INTO User (id, email, password, name) VALUES (lower(hex(randomblob(16))), 'admin@example.com', 'password123', 'AraZhar')"
 
 # 7. Isi .env
 # JWT_SECRET, GEMINI_API_KEY, GROQ_API_KEY, NEXT_PUBLIC_WA_NUMBER, NEXT_PUBLIC_URL

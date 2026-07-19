@@ -1,5 +1,5 @@
 export default function robots() {
-  const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://clover.azhr.workers.dev'
+  const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://azr.is-a.dev'
 
   return {
     rules: [

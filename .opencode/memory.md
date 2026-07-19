@@ -5,7 +5,7 @@
 - **Tech Stack**: Next.js 15 (App Router), Tailwind CSS, Cloudflare Workers + D1 + OpenNext
 - **Auth**: Custom JWT (jose) — no NextAuth
 - **Deploy**: Cloudflare Workers (opennextjs-cloudflare)
-- **Domain**: https://clover-two-ashy.vercel.app (legacy Vercel — migrating to CF)
+- **Domain**: https://azr.is-a.dev (legacy Vercel — live on Vercel)
 
 ## Pages
 - `/` — Hero, Projects, Contact
