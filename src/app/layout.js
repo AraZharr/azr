@@ -1,11 +1,9 @@
-import dynamic from 'next/dynamic'
 import './globals.css'
 import { Inter } from 'next/font/google'
 import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
+import ChatWidgetLazy from '@/components/ChatWidgetLazy'
 import { Toaster } from '@/components/ui/sonner'
-
-const Footer = dynamic(() => import('@/components/Footer'), { ssr: true })
-const ChatWidget = dynamic(() => import('@/components/ChatWidget'), { ssr: false })
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
@@ -102,7 +100,7 @@ export default async function RootLayout({ children }) {
         <Navbar />
         <main className="flex-1 flex flex-col">{children}</main>
         <Footer />
-        <ChatWidget />
+        <ChatWidgetLazy />
         <Toaster />
       </body>
     </html>
