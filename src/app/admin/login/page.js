@@ -2,6 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+'use client'
+
+import { useState, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { Eye, EyeOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -13,46 +17,66 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [token, setToken] = useState('')
+  const [turnstileToken, setTurnstileToken] = useState('')
   const [loading, setLoading] = useState(false)
+  const containerRef = useRef(null)
+  const renderReadyRef = useRef(false)
 
-  useEffect(() => {
-    if (!TURNSTILE_SITE_KEY) return
+  const renderWidget = () => {
+    if (renderReadyRef.current || !containerRef.current) return
+    renderReadyRef.current = true
+
     const script = document.createElement('script')
     script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
     script.async = true
-    document.body.appendChild(script)
-    window.onTurnstileCallback = (t) => setToken(t)
-    return () => { window.onTurnstileCallback = undefined }
+    script.onload = () => {
+      if (window.turnstile) {
+        window.turnstile.render(containerRef.current, {
+          sitekey: TURNSTILE_SITE_KEY,
+          callback: (token) => {
+            setTurnstileToken(token)
+            setError('')
+          },
+          'expired-callback': () => setTurnstileToken(''),
+          'error-callback': () => setTurnstileToken(''),
+        })
+      }
+    }
+    document.head.appendChild(script)
+  }
+
+  useEffect(() => {
+    if (!TURNSTILE_SITE_KEY || !containerRef.current) return
+    renderWidget()
   }, [])
 
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
 
-    if (TURNSTILE_SITE_KEY && !token) {
-      // Execute Turnstile invisible if widget exists
-      if (window.turnstile && !loading) {
-        window.turnstile.execute()
-      }
+    if (TURNSTILE_SITE_KEY && !turnstileToken) {
       setError('Silakan verifikasi CAPTCHA terlebih dahulu')
       return
     }
-    setLoading(true)
 
+    setLoading(true)
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, token }),
+        body: JSON.stringify({ email, password, turnstileToken }),
       })
-
       const data = await res.json()
 
       if (!res.ok) {
         setError(data.error || 'Email atau password salah')
-        setToken('')
-        if (window.turnstile) window.turnstile.reset()
+        setTurnstileToken('')
+        if (containerRef.current && window.turnstile) {
+          window.turnstile.reset()
+          renderReadyRef.current = false
+          containerRef.current.innerHTML = ''
+          renderWidget()
+        }
       } else {
         router.push('/admin/dashboard')
       }
@@ -110,7 +134,7 @@ export default function LoginPage() {
         </div>
 
         {TURNSTILE_SITE_KEY && (
-          <div className="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-callback="onTurnstileCallback"></div>
+          <div ref={containerRef} className="cf-turnstile"></div>
         )}
 
         <Button type="submit" className="w-full" disabled={loading}>
