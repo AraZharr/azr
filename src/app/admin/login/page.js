@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Eye, EyeOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -15,33 +15,21 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [turnstileToken, setTurnstileToken] = useState('')
   const [loading, setLoading] = useState(false)
-  const containerRef = useRef(null)
 
   useEffect(() => {
-    if (!TURNSTILE_SITE_KEY || !containerRef.current) return
-
-    const script = document.createElement('script')
-    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
-    script.async = true
-    script.defer = true
-    script.onload = () => {
-      window.turnstile.render(containerRef.current, {
-        sitekey: TURNSTILE_SITE_KEY,
-        callback: (token) => {
-          setTurnstileToken(token)
-          setError('')
-        },
-        'expired-callback': () => setTurnstileToken(''),
-        'error-callback': () => setTurnstileToken(''),
-      })
+    if (!TURNSTILE_SITE_KEY) return
+    window.onTurnstileCallback = (token) => {
+      setTurnstileToken(token)
+      setError('')
     }
-    document.head.appendChild(script)
-
-    return () => {
-      if (window.turnstile) {
-        try { window.turnstile.remove() } catch {}
-      }
+    if (!document.querySelector('script[src*="turnstile"]')) {
+      const s = document.createElement('script')
+      s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
+      s.async = true
+      s.defer = true
+      document.head.appendChild(s)
     }
+    return () => { window.onTurnstileCallback = undefined }
   }, [])
 
   async function handleSubmit(e) {
@@ -58,7 +46,7 @@ export default function LoginPage() {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, token: turnstileToken }),
+        body: JSON.stringify({ email, password, turnstileToken }),
       })
       const data = await res.json()
 
@@ -77,12 +65,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm bg-white p-8 rounded-xl border shadow-sm space-y-4"
+        className="w-full max-w-sm md:max-w-md lg:max-w-lg bg-white p-6 sm:p-8 md:p-10 rounded-xl border shadow-sm space-y-4 md:space-y-5"
       >
-        <h1 className="text-2xl font-bold text-center">Admin Login</h1>
+        <h1 className="text-xl md:text-2xl font-bold text-center">Admin Login</h1>
 
         {error && (
           <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded">{error}</p>
@@ -96,7 +84,7 @@ export default function LoginPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="h-8 w-full rounded-lg border border-gray-300 bg-transparent px-2.5 py-1 text-base outline-none focus:border-black transition-colors md:text-sm"
+            className="h-9 md:h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-1.5 text-base outline-none focus:border-black transition-colors md:text-sm"
           />
         </div>
 
@@ -109,7 +97,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="h-8 w-full rounded-lg border border-gray-300 bg-transparent px-2.5 py-1 text-base outline-none focus:border-black transition-colors md:text-sm pr-9"
+              className="h-9 md:h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-1.5 text-base outline-none focus:border-black transition-colors md:text-sm pr-9"
             />
             <button
               type="button"
@@ -123,10 +111,10 @@ export default function LoginPage() {
         </div>
 
         {TURNSTILE_SITE_KEY && (
-          <div ref={containerRef} className="cf-turnstile"></div>
+          <div className="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-callback="onTurnstileCallback"></div>
         )}
 
-        <Button type="submit" className="w-full" disabled={loading}>
+        <Button type="submit" className="w-full h-9 md:h-10" disabled={loading}>
           {loading ? 'Memproses...' : 'Login'}
         </Button>
       </form>

@@ -14,7 +14,7 @@ export default function Projects() {
   }, [])
 
   return (
-    <section id="projects" className="max-w-4xl mx-auto px-4 py-20">
+    <section id="projects" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
       <motion.h2
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
