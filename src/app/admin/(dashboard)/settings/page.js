@@ -13,6 +13,7 @@ const FIELDS = [
   { key: 'site_title', label: 'Site Title', type: 'text', section: 'brand' },
   { key: 'site_tagline', label: 'Tagline', type: 'text', section: 'brand' },
   { key: 'logo', label: 'Logo Image', type: 'image', section: 'brand' },
+  { key: 'favicon', label: 'Favicon Icon', type: 'image', section: 'brand' },
   { key: 'og_image', label: 'OG Image', type: 'image', section: 'seo' },
   { key: 'og_title', label: 'OG Title (fallback: Site Title)', type: 'text', section: 'seo' },
   { key: 'meta_description', label: 'Meta Description', type: 'textarea', section: 'seo' },

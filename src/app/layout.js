@@ -88,6 +88,8 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="id">
       <head>
+        <link rel="icon" href="/api/favicon" sizes="any" />
+        <link rel="apple-touch-icon" href="/api/favicon" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
