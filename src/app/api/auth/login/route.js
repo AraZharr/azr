@@ -1,8 +1,43 @@
 import { NextResponse } from 'next/server'
 import * as d1 from '@/lib/d1'
 
+// Simple in-memory rate limiter
+const rateLimit = new Map()
+const WINDOW = 15_000 // 15 seconds
+const MAX_ATTEMPTS = 5
+
+function checkRateLimit(ip) {
+  const now = Date.now()
+  const entry = rateLimit.get(ip)
+  
+  if (!entry || now - entry.start > WINDOW) {
+    rateLimit.set(ip, { start: now, count: 1 })
+    return true
+  }
+  
+  entry.count++
+  if (entry.count > MAX_ATTEMPTS) {
+    return false
+  }
+  return true
+}
+
+// Cleanup stale entries every minute
+setInterval(() => {
+  const now = Date.now()
+  for (const [ip, entry] of rateLimit) {
+    if (now - entry.start > WINDOW * 2) rateLimit.delete(ip)
+  }
+}, 60_000)
+
 export async function POST(req) {
   try {
+    const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown'
+    
+    if (!checkRateLimit(ip)) {
+      return NextResponse.json({ error: 'Terlalu banyak percobaan. Coba lagi nanti.' }, { status: 429 })
+    }
+
     const { email, password, turnstileToken } = await req.json()
 
     if (!email || !password) {
@@ -30,7 +65,6 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Email atau password salah' }, { status: 401 })
     }
 
-    // Create session directly (inline)
     const sid = crypto.randomUUID()
     await d1.createSession(sid, { userId: user.id, email: user.email, name: user.name })
 
