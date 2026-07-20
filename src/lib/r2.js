@@ -81,7 +81,10 @@ export async function getObject(key) {
 }
 
 export async function putObject(key, body, { contentType, customMetadata = {} } = {}) {
-  const headers = { 'Content-Type': contentType || 'application/octet-stream' }
+  const headers = {
+    'Content-Type': contentType || 'application/octet-stream',
+    'Content-Length': String(body.length || body.byteLength || 0),
+  }
   for (const [k, v] of Object.entries(customMetadata)) {
     headers[`x-amz-meta-${k.toLowerCase()}`] = String(v)
   }
